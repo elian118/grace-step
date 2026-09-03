@@ -13,6 +13,7 @@ import com.postelian.backend.global.error.ErrorCode;
 import com.postelian.backend.global.error.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,7 +61,14 @@ public class AttendanceService {
      * 2. 필터링 기반 출석 목록 조회 (페이지네이션 지원)
      */
     public PageResponse<AttendanceResponse> getAttendanceList(LocalDate startDate, LocalDate endDate, String studentName, AttendanceStatus status, Pageable pageable) {
-        Page<Attendance> page = attendanceRepository.findAttendanceList(startDate, endDate, studentName, status, pageable);
+        // 1-based page index adjustment
+        Pageable adjustedPageable = PageRequest.of(
+                Math.max(0, pageable.getPageNumber() - 1),
+                pageable.getPageSize(),
+                pageable.getSort()
+        );
+
+        Page<Attendance> page = attendanceRepository.findAttendanceList(startDate, endDate, studentName, status, adjustedPageable);
         return PageResponse.of(
                 page.getContent().stream().map(this::convertToResponse).collect(Collectors.toList()),
                 PageMetadata.from(page)

@@ -41,9 +41,6 @@ public class StudentProfile extends BaseEntity {
     private GradeLevel gradeLevel; // 학년
 
     @Column(length = 20)
-    private String phoneNumber; // 학생 본인 연락처
-
-    @Column(length = 20)
     private String parentPhoneNumber; // 학부모 연락처
 
     @Column(nullable = false)
@@ -59,7 +56,6 @@ public class StudentProfile extends BaseEntity {
         this.teacher = teacher;
         this.schoolName = schoolName;
         this.gradeLevel = gradeLevel;
-        this.phoneNumber = phoneNumber;
         this.parentPhoneNumber = parentPhoneNumber;
         this.isActive = isActive != null ? isActive : true; // 기본값: 활성
         this.memo = memo;
@@ -83,11 +79,10 @@ public class StudentProfile extends BaseEntity {
     }
 
     // 프로필 정보 수정 (학교, 학년, 본인/학부모 연락처, 메모)
-    public void updateProfile(String schoolName, GradeLevel gradeLevel, String phoneNumber,
+    public void updateProfile(String schoolName, GradeLevel gradeLevel,
                               String parentPhoneNumber, String memo, String updatedBy) {
         this.schoolName = schoolName;
         this.gradeLevel = gradeLevel;
-        this.phoneNumber = phoneNumber;
         this.parentPhoneNumber = parentPhoneNumber;
         this.memo = memo;
         recordModification(updatedBy);

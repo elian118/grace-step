@@ -13,6 +13,7 @@ import com.postelian.backend.global.error.ErrorCode;
 import com.postelian.backend.global.error.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +32,14 @@ public class StudentProfileService {
      * 학생 프로필 다건 조회 (페이지네이션 및 필터링 검색)
      */
     public PageResponse<StudentProfileResponse> getStudentProfileList(String name, GradeLevel gradeLevel, String schoolName, Boolean isActive, Pageable pageable) {
-        Page<StudentProfile> page = studentProfileRepository.search(name, gradeLevel, schoolName, isActive, pageable);
+        // 1-based page index adjustment
+        Pageable adjustedPageable = PageRequest.of(
+                Math.max(0, pageable.getPageNumber() - 1),
+                pageable.getPageSize(),
+                pageable.getSort()
+        );
+
+        Page<StudentProfile> page = studentProfileRepository.search(name, gradeLevel, schoolName, isActive, adjustedPageable);
         return PageResponse.of(
                 page.getContent().stream().map(StudentProfileResponse::from).collect(Collectors.toList()),
                 PageMetadata.from(page)
@@ -45,7 +53,7 @@ public class StudentProfileService {
     public StudentProfileResponse registerStudent(StudentProfileRequest request, String createdBy) {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.USER_NOT_FOUND));
-        
+
         User teacher = userRepository.findById(request.getTeacherId())
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.USER_NOT_FOUND));
 
@@ -54,7 +62,6 @@ public class StudentProfileService {
                 .teacher(teacher)
                 .schoolName(request.getSchoolName())
                 .gradeLevel(request.getGradeLevel())
-                .phoneNumber(request.getPhoneNumber())
                 .parentPhoneNumber(request.getParentPhoneNumber())
                 .memo(request.getMemo())
                 .createdBy(createdBy)
@@ -71,17 +78,17 @@ public class StudentProfileService {
     public StudentProfileResponse updateStudent(Long id, StudentProfileRequest request, String updatedBy) {
         StudentProfile profile = studentProfileRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.STUDENT_NOT_FOUND));
-        
-        // 담당 강사 변경 필요 시 (실제 구현에서는 teacherId 검증 필요)
+
+        // 담당 강사 변경 필요 시
         if (!profile.getTeacher().getId().equals(request.getTeacherId())) {
              User teacher = userRepository.findById(request.getTeacherId())
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.USER_NOT_FOUND));
              profile.assignTeacher(teacher, updatedBy);
         }
 
-        profile.updateProfile(request.getSchoolName(), request.getGradeLevel(), request.getPhoneNumber(),
+        profile.updateProfile(request.getSchoolName(), request.getGradeLevel(),
                 request.getParentPhoneNumber(), request.getMemo(), updatedBy);
-                
+
         return StudentProfileResponse.from(profile);
     }
 
@@ -92,7 +99,7 @@ public class StudentProfileService {
     public void deleteStudent(Long id, String deletedBy) {
         StudentProfile profile = studentProfileRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.STUDENT_NOT_FOUND));
-        
+
         profile.delete(deletedBy);
     }
 }

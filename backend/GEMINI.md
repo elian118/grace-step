@@ -72,7 +72,7 @@ com.postelian.backend
 ### **2) AI 서비스 영역 (`domain/ai`) 작성 규칙**
 
 * Gemini 연동 시 프롬프트 정의, LLM API 호출, 응답 DTO 파싱 로직을 명확히 분리하여 구현.
-* API Key나 모델 설정 값은 코드에 하드코딩하지 않고 `.env` 및 `application.properties`의 `${GEMINI_API_KEY}` 구조를 참조.
+* API Key나 모델 설정 값은 코드에 하드코딩하지 않고 `.env` 및 `application.yml`의 `${GEMINI_API_KEY}` 구조를 참조.
 
 ### **3) 전역 처리 영역 (`global`) 작성 규칙**
 
@@ -85,3 +85,8 @@ com.postelian.backend
 * **Lombok:** `@Getter`, `@Builder`, `@NoArgsConstructor(access = AccessLevel.PROTECTED)` 위주로 활용.
 * **JPA 관계:** `@ManyToOne`, `@OneToOne` 연관관계는 N+1 문제 방지를 위해 반드시 `FetchType.LAZY`로 지정.
 * **Enum 매핑:** Enum 필드는 유지보수성을 위해 반드시 `@Enumerated(EnumType.STRING)` 사용.
+
+## 5. 제미나이 응답 규칙
+
+* 제미나이는 기본적으로 코드 작성만 진행합니다.
+* 애플리케이션 빌드, 실행, 기능 테스트는 사용자가 직접 요청하지 않는 한 제미나이가 진행하지 않습니다.

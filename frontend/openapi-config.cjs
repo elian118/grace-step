@@ -1,6 +1,11 @@
+require('dotenv').config();
+
+const rawBaseUrl = process.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1';
+const serverHost = rawBaseUrl.replace(/\/api\/v1\/?$/, '');
+
 /** @type {import('@rtk-query/codegen-openapi').ConfigFile} */
 const config = {
-  schemaFile: 'http://localhost:8080/api-docs/00.%20TOTAL-API',
+  schemaFile: `${serverHost}/api-docs/00.%20TOTAL-API`,
   apiFile: './src/api/emptyApi.ts',
   apiImport: 'emptySplitApi',
   hooks: {
@@ -10,13 +15,14 @@ const config = {
   },
   outputFiles: {
     './src/api/generated/userApi.ts': {
-      filterEndpoints: ['User API', /^\/api\/v1\/users/],
+      filterEndpoints: (_endpoint, action) => action.operation.tags?.includes('User API') ?? false,
     },
     './src/api/generated/studentApi.ts': {
-      filterEndpoints: ['Student Profile API', 'Student Attendance API', /^\/api\/v1\/students/],
+      filterEndpoints: (_endpoint, action) =>
+        action.operation.tags?.some((tag) => ['Student Profile API', 'Student Attendance API'].includes(tag)) ?? false,
     },
     './src/api/generated/examApi.ts': {
-      filterEndpoints: ['Exam API', /^\/api\/v1\/classes\/exams/],
+      filterEndpoints: (_endpoint, action) => action.operation.tags?.includes('Exam API') ?? false,
     },
   },
 };

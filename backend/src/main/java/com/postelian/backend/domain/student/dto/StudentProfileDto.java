@@ -33,9 +33,6 @@ public class StudentProfileDto {
         @Schema(description = "학년", example = "MIDDLE_1")
         private GradeLevel gradeLevel;
 
-        @Schema(description = "학생 본인 연락처", example = "010-1111-2222")
-        private String phoneNumber;
-
         @Schema(description = "학부모 연락처", example = "010-3333-4444")
         private String parentPhoneNumber;
 
@@ -44,12 +41,11 @@ public class StudentProfileDto {
 
         @Builder
         public StudentProfileRequest(Long userId, Long teacherId, String schoolName, GradeLevel gradeLevel,
-                                     String phoneNumber, String parentPhoneNumber, String memo) {
+                                     String parentPhoneNumber, String memo) {
             this.userId = userId;
             this.teacherId = teacherId;
             this.schoolName = schoolName;
             this.gradeLevel = gradeLevel;
-            this.phoneNumber = phoneNumber;
             this.parentPhoneNumber = parentPhoneNumber;
             this.memo = memo;
         }
