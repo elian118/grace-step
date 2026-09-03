@@ -40,6 +40,9 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# RTK Query Codegen
+**/src/api/generated
+
 # Editors & IDEs
 .idea/
 .vscode/*

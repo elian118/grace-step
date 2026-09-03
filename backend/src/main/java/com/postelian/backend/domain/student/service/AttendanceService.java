@@ -7,14 +7,17 @@ import com.postelian.backend.domain.student.entity.AttendanceStatus;
 import com.postelian.backend.domain.student.entity.StudentProfile;
 import com.postelian.backend.domain.student.repository.AttendanceRepository;
 import com.postelian.backend.domain.student.repository.StudentProfileRepository;
+import com.postelian.backend.global.common.PageMetadata;
+import com.postelian.backend.global.common.PageResponse;
 import com.postelian.backend.global.error.ErrorCode;
 import com.postelian.backend.global.error.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,12 +57,14 @@ public class AttendanceService {
     }
 
     /**
-     * 2. 필터링 기반 출석 목록 조회
+     * 2. 필터링 기반 출석 목록 조회 (페이지네이션 지원)
      */
-    public List<AttendanceResponse> getAttendanceList(LocalDate startDate, LocalDate endDate, String studentName, AttendanceStatus status) {
-        return attendanceRepository.findAttendanceList(startDate, endDate, studentName, status).stream()
-                .map(this::convertToResponse)
-                .collect(Collectors.toList());
+    public PageResponse<AttendanceResponse> getAttendanceList(LocalDate startDate, LocalDate endDate, String studentName, AttendanceStatus status, Pageable pageable) {
+        Page<Attendance> page = attendanceRepository.findAttendanceList(startDate, endDate, studentName, status, pageable);
+        return PageResponse.of(
+                page.getContent().stream().map(this::convertToResponse).collect(Collectors.toList()),
+                PageMetadata.from(page)
+        );
     }
 
     /**

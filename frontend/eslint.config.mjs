@@ -1,6 +1,6 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { FlatCompat } from '@eslint/eslintrc';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -11,7 +11,7 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.config({
-    extends: ["next/core-web-vitals", "next/typescript"],
+    extends: ['next/core-web-vitals', 'next/typescript'],
     rules: {
       'max-len': [
         'error',
@@ -24,9 +24,10 @@ const eslintConfig = [
           ignoreUrls: true,
           ignoreTemplateLiterals: true,
           ignorePatterns: '^import\\s.+\\sfrom\\s.+;$',
-        }
+        },
       ],
       'no-use-before-define': 'off',
+      'no-empty-pattern': 'warn',
       'linebreak-style': 'off',
       camelcase: 'warn',
       'max-nested-callbacks': 'off',
@@ -40,11 +41,11 @@ const eslintConfig = [
           ts: 'never',
           jsx: 'never',
           tsx: 'never',
-        }
+        },
       ],
       'no-underscore-dangle': 0,
       // react
-      'react/jsx-filename-extension': [2, {extensions: ['.js', '.jsx', '.ts', '.tsx']}],
+      'react/jsx-filename-extension': [2, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
       'react/require-default-props': 0,
       'react/jsx-props-no-spreading': 1,
       'react/jsx-uses-react': 'off',
@@ -53,8 +54,8 @@ const eslintConfig = [
       'react-hooks/exhaustive-deps': 'warn',
       // typescript
       '@typescript-eslint/no-use-before-define': 2,
-      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-    }
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+    },
   }),
 ];
 

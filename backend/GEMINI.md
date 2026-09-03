@@ -1,4 +1,4 @@
-# GEMINI.md - GraceStep 백엔드 프로젝트 컨텍스트 및 작성 규칙
+# GraceStep 백엔드 프로젝트 컨텍스트 및 작성 규칙
 
 ## 1. 프로젝트 개요 (Project Overview)
 - **프로젝트명:** GraceStep Backend

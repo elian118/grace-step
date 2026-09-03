@@ -29,7 +29,7 @@ public class UserResponse {
     private final UserStatus status;
 
     public UserResponse(User user) {
-        this.id = user.id(); // Using public getter if exists, otherwise field or id getter
+        this.id = user.getId();
         this.name = user.getName();
         this.email = user.getEmail();
         this.phoneNumber = user.getPhoneNumber();

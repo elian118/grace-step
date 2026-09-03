@@ -15,7 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.List;
+import com.postelian.backend.global.common.PageResponse;
+import org.springframework.data.domain.Pageable;
 
 @Tag(name = "Student Attendance API", description = "학생 출석 관리 관련 API")
 @RestController
@@ -35,14 +36,15 @@ public class AttendanceController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @Operation(summary = "출석 기록 목록 조회", description = "조회 기간, 학생명, 출석 상태별로 필터링된 출석 기록 목록을 조회합니다.")
+    @Operation(summary = "출석 기록 목록 조회", description = "조회 기간, 학생명, 출석 상태별로 필터링된 출석 기록 목록을 페이지 단위로 조회합니다.")
     @GetMapping
-    public ResponseEntity<List<AttendanceResponse>> getAttendanceList(
+    public ResponseEntity<PageResponse<AttendanceResponse>> getAttendanceList(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             @RequestParam(required = false) String studentName,
-            @RequestParam(required = false) AttendanceStatus status) {
-        List<AttendanceResponse> response = attendanceService.getAttendanceList(startDate, endDate, studentName, status);
+            @RequestParam(required = false) AttendanceStatus status,
+            Pageable pageable) {
+        PageResponse<AttendanceResponse> response = attendanceService.getAttendanceList(startDate, endDate, studentName, status, pageable);
         return ResponseEntity.ok(response);
     }
 
