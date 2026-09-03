@@ -1,0 +1,67 @@
+# [BE] Java / Spring Boot / Gradle
+HELP.md
+**/build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+.gradle/
+!**/gradle/wrapper/gradle-wrapper.jar
+
+### STS / Eclipse ###
+**/.apt_generated
+**/.classpath
+**/.factorypath
+**/.project
+**/.settings
+**/.springBeans
+**/.sts4-cache
+**/bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### NetBeans ###
+**/nbproject/private/
+**/nbbuild/
+**/dist/
+**/nbdist/
+**/.nb-gradle/
+
+# [FE] Node / Frontend
+**/node_modules/
+**/dist/
+**/dist-ssr/
+
+# Logs
+**/logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Editors & IDEs
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.iws
+*.iml
+*.ipr
+**/out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+# Environment Files
+.env
+.env.*
+!.env.example
+
+# OS / Uploads / Temp
+/uploads/
+*.tmp

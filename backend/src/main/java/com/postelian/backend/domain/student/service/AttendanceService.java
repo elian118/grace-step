@@ -1,0 +1,85 @@
+package com.postelian.backend.domain.student.service;
+
+import com.postelian.backend.domain.student.dto.AttendanceDto.AttendanceRequest;
+import com.postelian.backend.domain.student.dto.AttendanceDto.AttendanceResponse;
+import com.postelian.backend.domain.student.entity.Attendance;
+import com.postelian.backend.domain.student.entity.AttendanceStatus;
+import com.postelian.backend.domain.student.entity.StudentProfile;
+import com.postelian.backend.domain.student.repository.AttendanceRepository;
+import com.postelian.backend.domain.student.repository.StudentProfileRepository;
+import com.postelian.backend.global.error.ErrorCode;
+import com.postelian.backend.global.error.exception.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class AttendanceService {
+
+    private final AttendanceRepository attendanceRepository;
+    private final StudentProfileRepository studentProfileRepository;
+
+    /**
+     * 1. 출석 기록 및 수정
+     * 해당 날짜에 이미 기록이 있으면 수정, 없으면 새로 생성
+     */
+    @Transactional
+    public AttendanceResponse saveOrUpdateAttendance(AttendanceRequest request, String userId) {
+        Attendance attendance = attendanceRepository.findByStudentProfileIdAndAttendanceDate(
+                        request.getStudentProfileId(), request.getAttendanceDate())
+                .map(existing -> {
+                    existing.updateAttendance(request.getStatus(), request.getNote(), userId);
+                    return existing;
+                })
+                .orElseGet(() -> {
+                    StudentProfile studentProfile = studentProfileRepository.findById(request.getStudentProfileId())
+                            .orElseThrow(() -> new EntityNotFoundException(ErrorCode.STUDENT_NOT_FOUND));
+                    return Attendance.builder()
+                            .studentProfile(studentProfile)
+                            .attendanceDate(request.getAttendanceDate())
+                            .status(request.getStatus())
+                            .note(request.getNote())
+                            .createdBy(userId)
+                            .build();
+                });
+
+        Attendance saved = attendanceRepository.save(attendance);
+        return convertToResponse(saved);
+    }
+
+    /**
+     * 2. 필터링 기반 출석 목록 조회
+     */
+    public List<AttendanceResponse> getAttendanceList(LocalDate startDate, LocalDate endDate, String studentName, AttendanceStatus status) {
+        return attendanceRepository.findAttendanceList(startDate, endDate, studentName, status).stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 3. 출석 기록 삭제 (Soft Delete)
+     */
+    @Transactional
+    public void deleteAttendance(Long attendanceId, String userId) {
+        Attendance attendance = attendanceRepository.findById(attendanceId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
+        attendance.delete(userId);
+    }
+
+    private AttendanceResponse convertToResponse(Attendance attendance) {
+        return AttendanceResponse.builder()
+                .id(attendance.getId())
+                .studentProfileId(attendance.getStudentProfile().getId())
+                .studentName(attendance.getStudentProfile().getUser().getName())
+                .attendanceDate(attendance.getAttendanceDate())
+                .status(attendance.getStatus())
+                .note(attendance.getNote())
+                .build();
+    }
+}
