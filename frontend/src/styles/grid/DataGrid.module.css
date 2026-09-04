@@ -1,0 +1,15 @@
+.gridContainer {
+  @apply w-full h-full;
+  --ag-header-background-color: theme('colors.base-200');
+  --ag-header-foreground-color: theme('colors.base-content');
+  --ag-border-color: theme('colors.base-300');
+  --ag-row-hover-color: theme('colors.base-200/50');
+  --ag-selected-row-background-color: theme('colors.primary/10');
+  --ag-font-family: theme('fontFamily.sans');
+  --ag-font-size: 0.875rem;
+}
+
+.gridContainer :global(.ag-theme-alpine) {
+  --ag-header-height: 40px;
+  --ag-row-height: 44px;
+}

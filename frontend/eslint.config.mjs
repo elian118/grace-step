@@ -52,6 +52,7 @@ const eslintConfig = [
       'react/react-in-jsx-scope': 'off',
       'react-hooks/rule-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
+      '@typescript-eslint/no-explicit-any': 'warn',
       // typescript
       '@typescript-eslint/no-use-before-define': 2,
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
