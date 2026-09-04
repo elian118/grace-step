@@ -54,7 +54,7 @@ grace-step/
 ### 1. Repository Clone
 
 ```bash
-git clone [https://github.com/elian118/grace-step.git](https://github.com/elian118/grace-step.git)
+git clone https://github.com/elian118/grace-step.git
 cd grace-step
 
 ```
