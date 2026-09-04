@@ -14,6 +14,7 @@
     "codegen": "pnpm codegen:prep && pnpm codegen:api && pnpm codegen:docs"
   },
   "dependencies": {
+    "@phosphor-icons/react": "^2.1.10",
     "@reduxjs/toolkit": "^2.12.0",
     "@tailwindcss/vite": "^4.3.3",
     "ag-grid-community": "^36.1.0",
