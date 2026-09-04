@@ -96,8 +96,8 @@ pnpm dev
 
 각 애플리케이션의 세부 아키텍처, 디렉터리 구조 및 컨벤션은 하위 문서에서 확인할 수 있습니다.
 
-* **Backend Architecture & Guide**: [`backend/GEMINI.md`](https://www.google.com/search?q=./backend/GEMINI.md)
-* **Frontend Architecture & Guide**: [`frontend/GEMINI.md`](https://www.google.com/search?q=./frontend/GEMINI.md)
+* **Backend Architecture & Guide**: [`backend/GEMINI.md`](https://github.com/elian118/grace-step/blob/main/backend/GEMINI.md)
+* **Frontend Architecture & Guide**: [`frontend/GEMINI.md`](https://github.com/elian118/grace-step/blob/main/frontend/GEMINI.md)
 
 ---
 
