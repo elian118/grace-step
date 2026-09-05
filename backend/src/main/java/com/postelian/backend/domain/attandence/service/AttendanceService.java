@@ -19,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,11 +31,26 @@ public class AttendanceService {
     private final StudentProfileRepository studentProfileRepository;
 
     /**
-     * 1. 출석 기록 및 수정
-     * 해당 날짜에 이미 기록이 있으면 수정, 없으면 새로 생성
+     * 1. 출석 기록 및 수정 (단건)
      */
     @Transactional
     public AttendanceResponse saveOrUpdateAttendance(AttendanceRequest request, String userId) {
+        Attendance attendance = saveOrUpdateEntity(request, userId);
+        return convertToResponse(attendance);
+    }
+
+    /**
+     * 1. 출석 기록 및 수정 (다건)
+     */
+    @Transactional
+    public List<AttendanceResponse> saveOrUpdateAttendances(List<AttendanceRequest> requests, String userId) {
+        return requests.stream()
+                .map(request -> saveOrUpdateEntity(request, userId))
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
+    private Attendance saveOrUpdateEntity(AttendanceRequest request, String userId) {
         Attendance attendance = attendanceRepository.findByStudentProfileIdAndAttendanceDate(
                         request.getStudentProfileId(), request.getAttendanceDate())
                 .map(existing -> {
@@ -53,8 +69,7 @@ public class AttendanceService {
                             .build();
                 });
 
-        Attendance saved = attendanceRepository.save(attendance);
-        return convertToResponse(saved);
+        return attendanceRepository.save(attendance);
     }
 
     /**

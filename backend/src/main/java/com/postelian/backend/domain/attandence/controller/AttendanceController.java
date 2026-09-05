@@ -32,13 +32,23 @@ public class AttendanceController {
     private final AttendanceService attendanceService;
     private final FileService fileService;
 
-    @Operation(summary = "출석 기록 및 수정", description = "특정 학생의 당일 출석 여부와 메모를 기록하거나 기존 기록을 수정합니다.")
+    @Operation(summary = "출석 기록 및 수정 (단건)", description = "특정 학생의 당일 출석 여부와 메모를 기록하거나 기존 기록을 수정합니다.")
     @PostMapping
     public ResponseEntity<AttendanceResponse> saveOrUpdateAttendance(
             @RequestBody @Valid AttendanceRequest request,
             @Parameter(description = "작업을 수행하는 사용자 아이디", example = "teacher_01")
             @RequestHeader(value = "X-User-Id", required = false, defaultValue = "system") String userId) {
         AttendanceResponse response = attendanceService.saveOrUpdateAttendance(request, userId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @Operation(summary = "출석 기록 및 수정 (다건)", description = "학생 전원의 출석 정보를 한 번에 기록하거나 수정합니다.")
+    @PostMapping("/bulk")
+    public ResponseEntity<List<AttendanceResponse>> saveOrUpdateAttendances(
+            @RequestBody @Valid List<AttendanceRequest> requests,
+            @Parameter(description = "작업을 수행하는 사용자 아이디", example = "teacher_01")
+            @RequestHeader(value = "X-User-Id", required = false, defaultValue = "system") String userId) {
+        List<AttendanceResponse> response = attendanceService.saveOrUpdateAttendances(requests, userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
