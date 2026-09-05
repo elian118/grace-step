@@ -1,5 +1,6 @@
-package com.postelian.backend.domain.student.entity;
+package com.postelian.backend.domain.attandence.entity;
 
+import com.postelian.backend.domain.student.entity.StudentProfile;
 import com.postelian.backend.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

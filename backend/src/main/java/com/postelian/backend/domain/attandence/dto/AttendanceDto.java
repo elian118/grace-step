@@ -1,6 +1,6 @@
-package com.postelian.backend.domain.student.dto;
+package com.postelian.backend.domain.attandence.dto;
 
-import com.postelian.backend.domain.student.entity.AttendanceStatus;
+import com.postelian.backend.domain.attandence.entity.AttendanceStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;

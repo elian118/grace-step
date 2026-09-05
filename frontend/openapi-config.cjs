@@ -14,12 +14,17 @@ const config = {
     mutations: true,
   },
   outputFiles: {
+    './src/api/generated/fileApi.ts': {
+      filterEndpoints: (_endpoint, action) => action.operation.tags?.includes('File API') ?? false,
+    },
     './src/api/generated/userApi.ts': {
       filterEndpoints: (_endpoint, action) => action.operation.tags?.includes('User API') ?? false,
     },
     './src/api/generated/studentApi.ts': {
-      filterEndpoints: (_endpoint, action) =>
-        action.operation.tags?.some((tag) => ['Student Profile API', 'Student Attendance API'].includes(tag)) ?? false,
+      filterEndpoints: (_endpoint, action) => action.operation.tags?.includes('Student Profile API') ?? false,
+    },
+    './src/api/generated/attendanceApi.ts': {
+      filterEndpoints: (_endpoint, action) => action.operation.tags?.includes('Student Attendance API') ?? false,
     },
     './src/api/generated/examApi.ts': {
       filterEndpoints: (_endpoint, action) => action.operation.tags?.includes('Exam API') ?? false,

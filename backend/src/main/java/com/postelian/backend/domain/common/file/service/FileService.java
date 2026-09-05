@@ -17,6 +17,7 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -118,6 +119,16 @@ public class FileService {
     public File getFileEntity(Long fileId) {
         return fileRepository.findById(fileId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 파일입니다. ID: " + fileId));
+    }
+
+    /**
+     * 타입과 생성일 범위로 파일 조회
+     */
+    public List<FileResponseDto> getFileEntitiesByTypeAndDate(String type, LocalDateTime startDate, LocalDateTime endDate) {
+        return fileRepository.findByTypeAndCreatedAtBetween(type, startDate, endDate)
+                .stream()
+                .map(FileResponseDto::from)
+                .toList();
     }
 
     /**

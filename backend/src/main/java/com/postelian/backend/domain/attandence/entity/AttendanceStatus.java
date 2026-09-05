@@ -1,4 +1,4 @@
-package com.postelian.backend.domain.student.entity;
+package com.postelian.backend.domain.attandence.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

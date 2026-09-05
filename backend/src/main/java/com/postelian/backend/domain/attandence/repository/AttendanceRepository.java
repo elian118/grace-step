@@ -1,7 +1,7 @@
-package com.postelian.backend.domain.student.repository;
+package com.postelian.backend.domain.attandence.repository;
 
-import com.postelian.backend.domain.student.entity.Attendance;
-import com.postelian.backend.domain.student.entity.AttendanceStatus;
+import com.postelian.backend.domain.attandence.entity.Attendance;
+import com.postelian.backend.domain.attandence.entity.AttendanceStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

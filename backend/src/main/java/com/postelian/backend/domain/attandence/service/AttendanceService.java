@@ -1,11 +1,11 @@
-package com.postelian.backend.domain.student.service;
+package com.postelian.backend.domain.attandence.service;
 
-import com.postelian.backend.domain.student.dto.AttendanceDto.AttendanceRequest;
-import com.postelian.backend.domain.student.dto.AttendanceDto.AttendanceResponse;
-import com.postelian.backend.domain.student.dto.AttendanceSearchRequestDto;
-import com.postelian.backend.domain.student.entity.Attendance;
+import com.postelian.backend.domain.attandence.dto.AttendanceDto.AttendanceRequest;
+import com.postelian.backend.domain.attandence.dto.AttendanceDto.AttendanceResponse;
+import com.postelian.backend.domain.attandence.dto.AttendanceSearchRequestDto;
+import com.postelian.backend.domain.attandence.entity.Attendance;
 import com.postelian.backend.domain.student.entity.StudentProfile;
-import com.postelian.backend.domain.student.repository.AttendanceRepository;
+import com.postelian.backend.domain.attandence.repository.AttendanceRepository;
 import com.postelian.backend.domain.student.repository.StudentProfileRepository;
 import com.postelian.backend.global.common.PageMetadata;
 import com.postelian.backend.global.common.PageResponse;

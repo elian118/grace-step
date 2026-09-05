@@ -45,14 +45,21 @@ const SCHEMA_URL = `${serverHost}/api-docs/00.%20TOTAL-API`;
 
 // outputFiles 매핑과 동일하게 맞춤
 const FILE_MAPPING: Record<string, { title: string; match: (path: string, tag: string) => boolean }> = {
+  'fileApi.md': {
+    title: 'File API 명세',
+    match: (url, tag) => tag === 'File API' || url.startsWith('/api/v1/common/file'),
+  },
   'userApi.md': {
     title: 'User API 명세',
     match: (url, tag) => tag === 'User API' || url.startsWith('/api/v1/user'),
   },
   'studentApi.md': {
-    title: 'Student API 명세 (프로필/출석)',
-    match: (url, tag) =>
-      tag === 'Student Profile API' || tag === 'Student Attendance API' || url.startsWith('/api/v1/students'),
+    title: 'Student Profile API 명세',
+    match: (url, tag) => tag === 'Student Profile API' || url.startsWith('/api/v1/students'),
+  },
+  'attendanceApi.md': {
+    title: 'Student Attendance API 명세',
+    match: (url, tag) => tag === 'Student Attendance API' || url.startsWith('/api/v1/attendances'),
   },
   'examApi.md': {
     title: 'Exam API 명세 (시험지)',
@@ -84,8 +91,7 @@ const extractTypeName = (schema?: SchemaRef): string => {
 const resolveHookName = (method: string, pathUrl: string, operationId?: string): string => {
   const isQuery = method.toUpperCase() === 'GET';
 
-  // eslint-disable-next-line no-useless-assignment
-  let baseName = '';
+  let baseName: string;
   if (operationId) {
     baseName = operationId.charAt(0).toUpperCase() + operationId.slice(1);
   } else {
@@ -183,7 +189,14 @@ const generateMarkdownDocs = async () => {
         if (isMatched && !processedKeys[fileName].has(endpointKey)) {
           processedKeys[fileName].add(endpointKey);
 
-          const row = `| ${summary} | \`${upperMethod}\` | \`${urlPath}\` | ${hookName} | \`${reqType}\` | \`${resType}\` |`;
+          const row = `  <tr>
+    <td style="white-space: nowrap;">${summary}</td>
+    <td style="text-align: center; white-space: nowrap;"><code>${upperMethod}</code></td>
+    <td style="white-space: nowrap;"><code>${urlPath}</code></td>
+    <td style="white-space: nowrap;">${hookName}</td>
+    <td style="white-space: nowrap;"><code>${reqType}</code></td>
+    <td style="white-space: nowrap;"><code>${resType}</code></td>
+  </tr>`;
           fileRows[fileName].push(row);
         }
       });
@@ -197,9 +210,47 @@ const generateMarkdownDocs = async () => {
     const lines = [
       `# ${config.title}\n`,
       `> 자동 생성된 API 문서입니다. (생성일시: ${new Date().toLocaleString('ko-KR')})\n`,
-      `| 기능 | Method | Endpoint | RTK Query Hook | Request Type | Response Type |`,
-      `| :--- | :---: | :--- | :--- | :--- | :--- |`,
+      `<style>`,
+      `  .api-doc-table-wrapper {`,
+      `    max-height: 75vh;`,
+      `    overflow: auto;`,
+      `    border: 1px solid var(--vscode-editor-lineHighlightBorder, #3c3c3c);`,
+      `    border-radius: 4px;`,
+      `  }`,
+      `  .api-doc-table {`,
+      `    width: max-content;`,
+      `    min-width: 100%;`,
+      `    border-collapse: collapse;`,
+      `  }`,
+      `  .api-doc-table th {`,
+      `    position: sticky;`,
+      `    top: 0;`,
+      `    z-index: 10;`,
+      `    background-color: var(--vscode-editor-background, #1e1e1e);`,
+      `    box-shadow: inset 0 -1px 0 var(--vscode-editor-lineHighlightBorder, #3c3c3c);`,
+      `    white-space: nowrap;`,
+      `  }`,
+      `  .api-doc-table th, .api-doc-table td {`,
+      `    padding: 8px 12px;`,
+      `  }`,
+      `</style>\n`,
+      `<div class="api-doc-table-wrapper">`,
+      `<table class="api-doc-table">`,
+      `<thead>`,
+      `  <tr>`,
+      `    <th>기능</th>`,
+      `    <th>Method</th>`,
+      `    <th>Endpoint</th>`,
+      `    <th>RTK Query Hook</th>`,
+      `    <th>Request Type</th>`,
+      `    <th>Response Type</th>`,
+      `  </tr>`,
+      `</thead>`,
+      `<tbody>`,
       ...(fileRows[fileName] || []),
+      `</tbody>`,
+      `</table>`,
+      `</div>`,
       '\n',
     ];
 

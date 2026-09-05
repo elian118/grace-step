@@ -1,5 +1,7 @@
 package com.postelian.backend.domain.student.entity;
 
+import com.postelian.backend.domain.attandence.entity.Attendance;
+import com.postelian.backend.domain.attandence.entity.AttendanceStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
