@@ -2,7 +2,7 @@ package com.postelian.backend.domain.student.controller;
 
 import com.postelian.backend.domain.student.dto.StudentProfileDto.StudentProfileRequest;
 import com.postelian.backend.domain.student.dto.StudentProfileDto.StudentProfileResponse;
-import com.postelian.backend.domain.student.entity.GradeLevel;
+import com.postelian.backend.domain.student.dto.StudentProfileSearchDto;
 import com.postelian.backend.domain.student.service.StudentProfileService;
 import com.postelian.backend.global.common.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,8 +10,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,12 +25,9 @@ public class StudentProfileController {
     @Operation(summary = "학생 프로필 다건 조회", description = "필터 조건에 따라 학생 프로필 목록을 페이지 단위로 조회합니다.")
     @GetMapping
     public ResponseEntity<PageResponse<StudentProfileResponse>> getStudentProfileList(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) GradeLevel gradeLevel,
-            @RequestParam(required = false) String schoolName,
-            @RequestParam(required = false) Boolean isActive,
-            @PageableDefault Pageable pageable) {
-        PageResponse<StudentProfileResponse> response = studentProfileService.getStudentProfileList(name, gradeLevel, schoolName, isActive, pageable);
+            @ModelAttribute StudentProfileSearchDto dto
+    ) {
+        PageResponse<StudentProfileResponse> response = studentProfileService.getStudentProfileList(dto);
         return ResponseEntity.ok(response);
     }
 

@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '@/store';
-import { addToast, removeToast, ToastType, ToastInstance } from '@/store/toastSlice';
+import { addToast, removeToast, type ToastType, type ToastInstance } from '@/store/toastSlice';
 import { useCallback } from 'react';
 
 export const useToast = () => {
@@ -16,17 +16,17 @@ export const useToast = () => {
           message,
           type,
           duration,
-        })
+        }),
       );
     },
-    [dispatch]
+    [dispatch],
   );
 
   const remove = useCallback(
     (id: string) => {
       dispatch(removeToast(id));
     },
-    [dispatch]
+    [dispatch],
   );
 
   return {

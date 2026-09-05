@@ -2,21 +2,17 @@ package com.postelian.backend.domain.student.controller;
 
 import com.postelian.backend.domain.student.dto.AttendanceDto.AttendanceRequest;
 import com.postelian.backend.domain.student.dto.AttendanceDto.AttendanceResponse;
-import com.postelian.backend.domain.student.entity.AttendanceStatus;
+import com.postelian.backend.domain.student.dto.AttendanceSearchRequestDto;
 import com.postelian.backend.domain.student.service.AttendanceService;
+import com.postelian.backend.global.common.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
-import com.postelian.backend.global.common.PageResponse;
-import org.springframework.data.domain.Pageable;
 
 @Tag(name = "Student Attendance API", description = "학생 출석 관리 관련 API")
 @RestController
@@ -39,12 +35,8 @@ public class AttendanceController {
     @Operation(summary = "출석 기록 목록 조회", description = "조회 기간, 학생명, 출석 상태별로 필터링된 출석 기록 목록을 페이지 단위로 조회합니다.")
     @GetMapping
     public ResponseEntity<PageResponse<AttendanceResponse>> getAttendanceList(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-            @RequestParam(required = false) String studentName,
-            @RequestParam(required = false) AttendanceStatus status,
-            Pageable pageable) {
-        PageResponse<AttendanceResponse> response = attendanceService.getAttendanceList(startDate, endDate, studentName, status, pageable);
+            @ModelAttribute AttendanceSearchRequestDto dto) {
+        PageResponse<AttendanceResponse> response = attendanceService.getAttendanceList(dto);
         return ResponseEntity.ok(response);
     }
 

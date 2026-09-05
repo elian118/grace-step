@@ -2,7 +2,7 @@ package com.postelian.backend.domain.student.service;
 
 import com.postelian.backend.domain.student.dto.StudentProfileDto.StudentProfileRequest;
 import com.postelian.backend.domain.student.dto.StudentProfileDto.StudentProfileResponse;
-import com.postelian.backend.domain.student.entity.GradeLevel;
+import com.postelian.backend.domain.student.dto.StudentProfileSearchDto;
 import com.postelian.backend.domain.student.entity.StudentProfile;
 import com.postelian.backend.domain.student.repository.StudentProfileRepository;
 import com.postelian.backend.domain.user.entity.User;
@@ -31,15 +31,15 @@ public class StudentProfileService {
     /**
      * 학생 프로필 다건 조회 (페이지네이션 및 필터링 검색)
      */
-    public PageResponse<StudentProfileResponse> getStudentProfileList(String name, GradeLevel gradeLevel, String schoolName, Boolean isActive, Pageable pageable) {
+    public PageResponse<StudentProfileResponse> getStudentProfileList(StudentProfileSearchDto dto) {
         // 1-based page index adjustment
         Pageable adjustedPageable = PageRequest.of(
-                Math.max(0, pageable.getPageNumber() - 1),
-                pageable.getPageSize(),
-                pageable.getSort()
+                Math.max(0, dto.getPageable().getPageNumber() - 1),
+                dto.getPageable().getPageSize(),
+                dto.getPageable().getSort()
         );
 
-        Page<StudentProfile> page = studentProfileRepository.search(name, gradeLevel, schoolName, isActive, adjustedPageable);
+        Page<StudentProfile> page = studentProfileRepository.search(dto.getName(), dto.getGradeLevel(), dto.getSchoolName(), dto.getIsActive(), adjustedPageable);
         return PageResponse.of(
                 page.getContent().stream().map(StudentProfileResponse::from).collect(Collectors.toList()),
                 PageMetadata.from(page)

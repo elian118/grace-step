@@ -14,6 +14,18 @@ spring:
   profiles:
     active: local
 
+# 파일 저장 경로 설정 (크로스 플랫폼 호환)
+# OS별 홈 디렉터리 경로 예시:
+# - Windows: C:/Users/{Username}/app-files
+# - Mac/Linux: /Users/{Username}/app-files 또는 /home/{Username}/app-files
+# - Prod: .env의 FILE_UPLOAD_DIR가 있으면 우선 사용, 없으면 user.home 사용
+file:
+  upload:
+    base-dir: ${FILE_UPLOAD_DIR:${user.home}/app-files}
+    sub-dir:
+      exams: ${file.upload.base-dir}/exams
+      attendances: ${file.upload.base-dir}/attendances
+
 # Swagger 공통 설정
 springdoc:
   api-docs:

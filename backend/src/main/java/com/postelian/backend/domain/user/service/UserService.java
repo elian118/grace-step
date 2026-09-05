@@ -1,9 +1,9 @@
 package com.postelian.backend.domain.user.service;
 
-import com.postelian.backend.domain.user.dto.UserResponse;
-import com.postelian.backend.domain.user.dto.UserSignUpRequest;
-import com.postelian.backend.domain.user.dto.UserUpdateRequest;
-import com.postelian.backend.domain.user.entity.Role;
+import com.postelian.backend.domain.user.dto.UserResponseDto;
+import com.postelian.backend.domain.user.dto.UserSearchRequestDto;
+import com.postelian.backend.domain.user.dto.UserSignUpRequestDto;
+import com.postelian.backend.domain.user.dto.UserUpdateRequestDto;
 import com.postelian.backend.domain.user.entity.User;
 import com.postelian.backend.domain.user.entity.UserStatus;
 import com.postelian.backend.domain.user.repository.UserRepository;
@@ -14,7 +14,6 @@ import com.postelian.backend.global.error.exception.EntityNotFoundException;
 import com.postelian.backend.global.error.exception.InvalidValueException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,10 +29,10 @@ public class UserService {
     /**
      * 회원 다건 조회 (페이지네이션 및 필터링 검색)
      */
-    public PageResponse<UserResponse> getUserList(String name, String email, Role role, Pageable pageable) {
-        Page<User> page = userRepository.search(name, email, role, pageable);
+    public PageResponse<UserResponseDto> getUserList(UserSearchRequestDto dto) {
+        Page<User> page = userRepository.search(dto.getName(), dto.getEmail(), dto.getRole(), dto.getPageable());
         return PageResponse.of(
-                page.getContent().stream().map(UserResponse::from).collect(Collectors.toList()),
+                page.getContent().stream().map(UserResponseDto::from).collect(Collectors.toList()),
                 PageMetadata.from(page)
         );
     }
@@ -42,7 +41,7 @@ public class UserService {
      * 회원 가입
      */
     @Transactional
-    public UserResponse signUp(UserSignUpRequest request, String createdBy) {
+    public UserResponseDto signUp(UserSignUpRequestDto request, String createdBy) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new InvalidValueException(ErrorCode.EMAIL_DUPLICATION);
         }
@@ -58,19 +57,19 @@ public class UserService {
                 .build();
 
         User savedUser = userRepository.save(user);
-        return UserResponse.from(savedUser);
+        return UserResponseDto.from(savedUser);
     }
 
     /**
      * 회원 정보 수정
      */
     @Transactional
-    public UserResponse updateUser(Long id, UserUpdateRequest request, String updatedBy) {
+    public UserResponseDto updateUser(Long id, UserUpdateRequestDto request, String updatedBy) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.USER_NOT_FOUND));
 
         user.updateProfile(request.getName(), request.getPhoneNumber(), updatedBy);
-        return UserResponse.from(user);
+        return UserResponseDto.from(user);
     }
 
     /**
@@ -88,9 +87,9 @@ public class UserService {
     /**
      * 회원 단건 조회
      */
-    public UserResponse getUser(Long id) {
+    public UserResponseDto getUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.USER_NOT_FOUND));
-        return UserResponse.from(user);
+        return UserResponseDto.from(user);
     }
 }

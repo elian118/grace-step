@@ -2,8 +2,8 @@ package com.postelian.backend.domain.student.service;
 
 import com.postelian.backend.domain.student.dto.AttendanceDto.AttendanceRequest;
 import com.postelian.backend.domain.student.dto.AttendanceDto.AttendanceResponse;
+import com.postelian.backend.domain.student.dto.AttendanceSearchRequestDto;
 import com.postelian.backend.domain.student.entity.Attendance;
-import com.postelian.backend.domain.student.entity.AttendanceStatus;
 import com.postelian.backend.domain.student.entity.StudentProfile;
 import com.postelian.backend.domain.student.repository.AttendanceRepository;
 import com.postelian.backend.domain.student.repository.StudentProfileRepository;
@@ -18,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.stream.Collectors;
 
 @Service
@@ -60,15 +59,15 @@ public class AttendanceService {
     /**
      * 2. 필터링 기반 출석 목록 조회 (페이지네이션 지원)
      */
-    public PageResponse<AttendanceResponse> getAttendanceList(LocalDate startDate, LocalDate endDate, String studentName, AttendanceStatus status, Pageable pageable) {
+    public PageResponse<AttendanceResponse> getAttendanceList(AttendanceSearchRequestDto dto) {
         // 1-based page index adjustment
         Pageable adjustedPageable = PageRequest.of(
-                Math.max(0, pageable.getPageNumber() - 1),
-                pageable.getPageSize(),
-                pageable.getSort()
+                Math.max(0, dto.getPageable().getPageNumber() - 1),
+                dto.getPageable().getPageSize(),
+                dto.getPageable().getSort()
         );
 
-        Page<Attendance> page = attendanceRepository.findAttendanceList(startDate, endDate, studentName, status, adjustedPageable);
+        Page<Attendance> page = attendanceRepository.findAttendanceList(dto.getStartDate(), dto.getEndDate(), dto.getStudentName(), dto.getStatus(), adjustedPageable);
         return PageResponse.of(
                 page.getContent().stream().map(this::convertToResponse).collect(Collectors.toList()),
                 PageMetadata.from(page)
