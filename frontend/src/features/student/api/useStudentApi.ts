@@ -2,14 +2,14 @@ import {
   type StudentProfileRequest,
   type StudentProfileSearchDto,
   useDeleteStudentMutation,
-  useLazyGetStudentProfileListQuery,
+  useGetStudentProfileListMutation,
   useRegisterStudentMutation,
   useUpdateStudentMutation,
 } from '@/api/generated/studentApi.ts';
 import { useToast } from '@/hooks';
 
 export const useStudentApi = () => {
-  const [getStudentTrigger, getStudentStatus] = useLazyGetStudentProfileListQuery();
+  const [getStudentTrigger, getStudentStatus] = useGetStudentProfileListMutation();
   const [insertStudentTrigger, insertStudentStatus] = useRegisterStudentMutation();
   const [updateStudentTrigger, updateStudentStatus] = useUpdateStudentMutation();
   const [delStudentTrigger, delStudentStatus] = useDeleteStudentMutation();
@@ -18,7 +18,7 @@ export const useStudentApi = () => {
 
   const getStudent = async (params: StudentProfileSearchDto) => {
     try {
-      return await getStudentTrigger({ dto: params }).unwrap();
+      return await getStudentTrigger({ studentProfileSearchDto: params }).unwrap();
     } catch (err) {
       errorHandler(err);
     }

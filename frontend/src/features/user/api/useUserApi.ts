@@ -1,6 +1,5 @@
 import {
   useDeleteUserMutation,
-  useLazyGetUserListQuery,
   useLazyGetUserQuery,
   type UserSearchRequestDto,
   type UserSignUpRequestDto,
@@ -9,12 +8,11 @@ import {
   useUpdateUserMutation,
 } from '@/api/generated/userApi.ts';
 import { useToast } from '@/hooks';
-import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
-import type { CustomApiError } from '@/types/CustomApiError.ts';
+import { useGetUserListMutation } from '@/api/generated/userApi.ts';
 
 export const useUserApi = () => {
   const [getUserTrigger, getUserStatus] = useLazyGetUserQuery();
-  const [getUsersTrigger, getUsersStatus] = useLazyGetUserListQuery();
+  const [getUsersTrigger, getUsersStatus] = useGetUserListMutation();
   const [insertUserTrigger, insertUserStatus] = useSignUpMutation();
   const [updateUserTrigger, updateUserStatus] = useUpdateUserMutation();
   const [deleteUserTrigger, deleteUserStatus] = useDeleteUserMutation();
@@ -31,7 +29,7 @@ export const useUserApi = () => {
 
   const getUsers = async (params: UserSearchRequestDto) => {
     try {
-      return await getUsersTrigger({ dto: params }).unwrap();
+      return await getUsersTrigger({ userSearchRequestDto: params }).unwrap();
     } catch (err) {
       errorHandler(err);
     }

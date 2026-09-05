@@ -2,25 +2,29 @@ import {
   type AttendanceRequest,
   type AttendanceSearchRequestDto,
   useDeleteAttendanceMutation,
+  useGetAttendanceListMutation,
   useLazyGetAttendanceFilesQuery,
-  useLazyGetAttendanceListQuery,
   useSaveOrUpdateAttendanceMutation,
+  useSaveOrUpdateAttendancesMutation,
   useUploadAttendanceFileMutation,
 } from '@/api/generated/attendanceApi.ts';
 import { useToast } from '@/hooks';
+import { type StudentProfileSearchDto, useGetStudentProfileListMutation } from '@/api/generated/studentApi.ts';
 
 export const useAttendanceApi = () => {
-  const [getAttendancesTrigger, getAttendancesStatus] = useLazyGetAttendanceListQuery();
+  const [getProfilesTrigger, getProfilesStatus] = useGetStudentProfileListMutation();
+  const [getAttendancesTrigger, getAttendancesStatus] = useGetAttendanceListMutation();
   const [getAttendanceFilesTrigger, getAttendanceFilesStatus] = useLazyGetAttendanceFilesQuery();
   const [uploadAttendanceFileTrigger, uploadAttendanceFileStatus] = useUploadAttendanceFileMutation();
   const [updateAttendanceTrigger, updateAttendanceStatus] = useSaveOrUpdateAttendanceMutation();
   const [delAttendanceTrigger, delAttendanceStatus] = useDeleteAttendanceMutation();
+  const [saveAttendancesTrigger, saveAttendancesStatus] = useSaveOrUpdateAttendancesMutation();
 
   const { toast, errorHandler } = useToast();
 
   const getAttendances = async (params: AttendanceSearchRequestDto) => {
     try {
-      return await getAttendancesTrigger({ dto: params }).unwrap();
+      return await getAttendancesTrigger({ attendanceSearchRequestDto: params }).unwrap();
     } catch (err) {
       errorHandler(err);
     }
@@ -34,10 +38,26 @@ export const useAttendanceApi = () => {
     }
   };
 
+  const getProfiles = async (params: StudentProfileSearchDto) => {
+    try {
+      return await getProfilesTrigger({ studentProfileSearchDto: params }).unwrap();
+    } catch (err) {
+      errorHandler(err);
+    }
+  };
+
   const uploadAttendanceFile = async (file: Blob) => {
     try {
       await uploadAttendanceFileTrigger({ body: { file } }).unwrap();
       toast('출석부 파일을 생성했습니다.', 'success');
+    } catch (err) {
+      errorHandler(err);
+    }
+  };
+
+  const saveAttendances = async (params: AttendanceRequest[]) => {
+    try {
+      await saveAttendancesTrigger({ body: params }).unwrap();
     } catch (err) {
       errorHandler(err);
     }
@@ -64,13 +84,17 @@ export const useAttendanceApi = () => {
   return {
     getAttendances,
     getAttendanceFiles,
+    getProfiles,
     uploadAttendanceFile,
     updateAttendance,
+    saveAttendances,
     delAttendance,
     getAttendancesStatus,
     getAttendanceFilesStatus,
+    getProfilesStatus,
     uploadAttendanceFileStatus,
     updateAttendanceStatus,
+    saveAttendancesStatus,
     delAttendanceStatus,
   };
 };

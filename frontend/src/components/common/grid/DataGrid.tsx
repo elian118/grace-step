@@ -4,7 +4,6 @@ import type { ColDef, GridOptions } from 'ag-grid-community';
 import styles from '@/styles/grid/DataGrid.module.css';
 import { GridLoadingOverlay } from './components/loading/GridLoadingOverlay';
 
-// AG Grid 필수 모듈 import (프로젝트 설정에 따라 다를 수 있으나 일반적인 방식)
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 
@@ -16,26 +15,33 @@ interface DataGridProps<TData> {
 }
 
 export const DataGrid = <TData,>({ rowData, columnDefs, gridOptions, isLoading }: DataGridProps<TData>) => {
-  const defaultColDef = useMemo<ColDef>(
+  const defaultColDef = useMemo<ColDef<TData>>(
     () => ({
       sortable: true,
       filter: true,
       resizable: true,
       flex: 1,
+      cellClass: 'flex items-center', // 셀 내부 버티컬 얼라인 확보
     }),
     [],
   );
 
   return (
-    <div className={`ag-theme-alpine ${styles.gridContainer} relative`} style={{ height: '500px', width: '100%' }}>
+    /* 모서리 둥글기(rounded-xl)와 테두리를 잡아주는 래퍼 */
+    <div className={`${styles.gridWrapper} relative`} style={{ height: '500px', width: '100%' }}>
       {isLoading && <GridLoadingOverlay />}
-      <AgGridReact
-        rowData={rowData}
-        columnDefs={columnDefs}
-        defaultColDef={defaultColDef}
-        pagination={false} // 커스텀 페이지네이션 사용을 위해 비활성화
-        {...gridOptions}
-      />
+      <div className={`ag-theme-alpine ${styles.gridContainer}`}>
+        <AgGridReact<TData>
+          rowData={rowData}
+          columnDefs={columnDefs}
+          defaultColDef={defaultColDef}
+          pagination={false}
+          singleClickEdit={true}
+          rowSelection="single"
+          animateRows={true}
+          {...gridOptions}
+        />
+      </div>
     </div>
   );
 };

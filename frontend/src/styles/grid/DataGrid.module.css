@@ -1,15 +1,54 @@
-.gridContainer {
-  @apply w-full h-full;
-  --ag-header-background-color: theme('colors.base-200');
-  --ag-header-foreground-color: theme('colors.base-content');
-  --ag-border-color: theme('colors.base-300');
-  --ag-row-hover-color: theme('colors.base-200/50');
-  --ag-selected-row-background-color: theme('colors.primary/10');
-  --ag-font-family: theme('fontFamily.sans');
-  --ag-font-size: 0.875rem;
+.gridWrapper {
+  @apply w-full h-full rounded-xl overflow-hidden border border-base-300 shadow-sm bg-base-100;
 }
 
-.gridContainer :global(.ag-theme-alpine) {
-  --ag-header-height: 40px;
-  --ag-row-height: 44px;
+.gridContainer {
+  @apply w-full h-full;
+
+  /* AG Grid 테마 CSS 변수 재정의 */
+  --ag-header-background-color: var(--color-base-200);
+  --ag-header-foreground-color: var(--color-base-content);
+  --ag-border-color: var(--color-base-300);
+  --ag-row-hover-color: color-mix(in srgb, var(--color-base-200) 60%, transparent);
+  --ag-selected-row-background-color: color-mix(in srgb, var(--color-primary) 12%, transparent);
+  --ag-font-family: var(--font-sans);
+  --ag-font-size: 0.875rem;
+
+  /* 높이 및 여백 설정 */
+  --ag-header-height: 48px;
+  --ag-row-height: 48px;
+  --ag-cell-horizontal-padding: 16px;
+}
+
+/* AG Grid 내부 세부 스타일 커스텀 */
+.gridContainer :global(.ag-root-wrapper) {
+  border: none !important;
+  border-radius: inherit;
+}
+
+/* 헤더 텍스트 강조 및 중앙/좌우 정렬 가독성 */
+.gridContainer :global(.ag-header-cell-label) {
+  font-weight: 600;
+  color: var(--color-base-content);
+}
+
+/* 셀 텍스트 수직 중앙 정렬 및 여백 확보 */
+.gridContainer :global(.ag-cell) {
+  display: flex;
+  align-items: center;
+}
+
+/* 행 하단 구분선 스타일링 */
+.gridContainer :global(.ag-row) {
+  border-bottom: 1px solid var(--color-base-200);
+}
+
+/* 스크롤바 모던 스타일링 */
+.gridContainer :global(.ag-body-viewport::-webkit-scrollbar) {
+  width: 6px;
+  height: 6px;
+}
+.gridContainer :global(.ag-body-viewport::-webkit-scrollbar-thumb) {
+  background-color: var(--color-base-300);
+  border-radius: 9999px;
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import SignUpDialogContent from '@/features/user/components/dialogs/SignUpDialogContent.tsx';
 import { SampleDialogContent } from '@/components/common/dialog/views/SampleDialogContent.tsx';
-import StudentProfileDialogContent from '@/features/student/components/StudentProfileDialogContent.tsx';
+import StudentProfileDialogContent from '@/features/student/components/dialogs/StudentProfileDialogContent.tsx';
 
 // 전역 다이얼로그 레지스트리 선언
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
