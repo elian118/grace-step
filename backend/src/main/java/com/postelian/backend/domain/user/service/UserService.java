@@ -14,6 +14,9 @@ import com.postelian.backend.global.error.exception.EntityNotFoundException;
 import com.postelian.backend.global.error.exception.InvalidValueException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +33,10 @@ public class UserService {
      * 회원 다건 조회 (페이지네이션 및 필터링 검색)
      */
     public PageResponse<UserResponseDto> getUserList(UserSearchRequestDto dto) {
-        Page<User> page = userRepository.search(dto.getName(), dto.getEmail(), dto.getRole(), dto.getPageable());
+        Sort sort = (dto.getSort() != null) ? Sort.by(dto.getSort()) : Sort.unsorted();
+        Pageable pageable = PageRequest.of(Math.max(0, dto.getPage() - 1), dto.getSize(), sort);
+
+        Page<User> page = userRepository.search(dto.getName(), dto.getEmail(), dto.getRole(), pageable);
         return PageResponse.of(
                 page.getContent().stream().map(UserResponseDto::from).collect(Collectors.toList()),
                 PageMetadata.from(page)

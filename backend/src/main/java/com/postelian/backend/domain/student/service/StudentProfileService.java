@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,14 +33,10 @@ public class StudentProfileService {
      * 학생 프로필 다건 조회 (페이지네이션 및 필터링 검색)
      */
     public PageResponse<StudentProfileResponse> getStudentProfileList(StudentProfileSearchDto dto) {
-        // 1-based page index adjustment
-        Pageable adjustedPageable = PageRequest.of(
-                Math.max(0, dto.getPageable().getPageNumber() - 1),
-                dto.getPageable().getPageSize(),
-                dto.getPageable().getSort()
-        );
+        Sort sort = (dto.getSort() != null) ? Sort.by(dto.getSort()) : Sort.unsorted();
+        Pageable pageable = PageRequest.of(Math.max(0, dto.getPage() - 1), dto.getSize(), sort);
 
-        Page<StudentProfile> page = studentProfileRepository.search(dto.getName(), dto.getGradeLevel(), dto.getSchoolName(), dto.getIsActive(), adjustedPageable);
+        Page<StudentProfile> page = studentProfileRepository.search(dto.getName(), dto.getGradeLevel(), dto.getSchoolName(), dto.getIsActive(), pageable);
         return PageResponse.of(
                 page.getContent().stream().map(StudentProfileResponse::from).collect(Collectors.toList()),
                 PageMetadata.from(page)

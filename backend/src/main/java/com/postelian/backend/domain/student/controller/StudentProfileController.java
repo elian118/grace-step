@@ -23,9 +23,9 @@ public class StudentProfileController {
     private final StudentProfileService studentProfileService;
 
     @Operation(summary = "학생 프로필 다건 조회", description = "필터 조건에 따라 학생 프로필 목록을 페이지 단위로 조회합니다.")
-    @GetMapping
+    @PostMapping("/list")
     public ResponseEntity<PageResponse<StudentProfileResponse>> getStudentProfileList(
-            @ModelAttribute StudentProfileSearchDto dto
+            @RequestBody StudentProfileSearchDto dto
     ) {
         PageResponse<StudentProfileResponse> response = studentProfileService.getStudentProfileList(dto);
         return ResponseEntity.ok(response);

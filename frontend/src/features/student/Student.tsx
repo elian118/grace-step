@@ -1,7 +1,27 @@
 import React from 'react';
+import { useDialog } from '@/hooks';
 
 const Student = () => {
-  return <div>학생</div>;
+  const { open } = useDialog();
+
+  const openProfileForm = () => {
+    open('STUDENT_PROFILE_DIALOG', {
+      title: '학생 프로필 입력',
+      options: {
+        size: 'sm',
+        preventCloseOnEsc: true,
+        preventCloseOnOutsideClick: true,
+      },
+    });
+  };
+
+  return (
+    <div>
+      <button className="btn btn-sm btn-primary" onClick={openProfileForm}>
+        프로필 등록
+      </button>
+    </div>
+  );
 };
 
 export default Student;

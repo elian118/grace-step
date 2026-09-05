@@ -25,9 +25,9 @@ public class UserController {
     private final UserService userService;
 
     @Operation(summary = "회원 다건 조회", description = "필터 조건에 따라 회원 목록을 페이지 단위로 조회합니다.")
-    @GetMapping
+    @PostMapping("/list")
     public ResponseEntity<PageResponse<UserResponseDto>> getUserList(
-            @ModelAttribute UserSearchRequestDto dto
+            @RequestBody UserSearchRequestDto dto
     ) {
         PageResponse<UserResponseDto> response = userService.getUserList(dto);
         return ResponseEntity.ok(response);

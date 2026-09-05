@@ -6,6 +6,7 @@ import {
   useUploadFileMutation,
   useUploadFilesMutation,
 } from '@/api/generated/fileApi.ts';
+import { useToast } from '@/hooks';
 
 export const useFileApi = () => {
   const [uploadFileTrigger, uploadFileStatus] = useUploadFileMutation();
@@ -13,19 +14,25 @@ export const useFileApi = () => {
   const [downloadFileTrigger, downloadFileStatus] = useLazyDownloadFileQuery();
   const [delFileTrigger, delFileStatus] = useDeleteFileMutation();
 
+  const { toast, errorHandler } = useToast();
+
   const uploadFile = async (param: Single) => {
     try {
-      return await uploadFileTrigger({ single: param }).unwrap();
+      const res = await uploadFileTrigger({ single: param }).unwrap();
+      toast('파일이 저장되었습니다.', 'success');
+      return res;
     } catch (err) {
-      //
+      errorHandler(err);
     }
   };
 
   const uploadFiles = async (params: Multiple) => {
     try {
-      return await uploadFilesTrigger({ multiple: params }).unwrap();
+      const res = await uploadFilesTrigger({ multiple: params }).unwrap();
+      toast('파일이 저장되었습니다.', 'success');
+      return res;
     } catch (err) {
-      //
+      errorHandler(err);
     }
   };
 
@@ -33,15 +40,16 @@ export const useFileApi = () => {
     try {
       return await downloadFileTrigger({ fileId }).unwrap();
     } catch (err) {
-      //
+      errorHandler(err);
     }
   };
 
   const delFile = async (fileId: number) => {
     try {
       await delFileTrigger({ fileId }).unwrap();
+      toast('파일이 삭제되었습니다.', 'success');
     } catch (err) {
-      //
+      errorHandler(err);
     }
   };
 

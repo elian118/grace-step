@@ -2,7 +2,7 @@ import { useAppDispatch, useAppSelector } from '@/store';
 import { openDialog, closeDialog, closeAllDialogs, type DialogInstance, type DialogOptions } from '@/store/dialogSlice';
 import { useCallback } from 'react';
 
-export interface OpenDialogParams<TProps = never> {
+export interface OpenDialogParams<TProps = Record<string, unknown>> {
   title?: string;
   props?: TProps;
   options?: DialogOptions;
@@ -13,15 +13,8 @@ export const useDialog = () => {
   const activeDialogs = useAppSelector((state) => state.dialog.activeDialogs);
 
   const open = useCallback(
-    <TProps extends undefined = never>(key: string, params?: OpenDialogParams<TProps>) => {
-      dispatch(
-        openDialog({
-          key,
-          title: params?.title,
-          props: params?.props,
-          options: params?.options,
-        }),
-      );
+    <TProps = Record<string, unknown>>(key: string, params?: OpenDialogParams<TProps>) => {
+      dispatch(openDialog({ key, title: params?.title, props: params?.props, options: params?.options }));
     },
     [dispatch],
   );
@@ -30,7 +23,7 @@ export const useDialog = () => {
     (key: string) => {
       dispatch(closeDialog(key));
     },
-    [dispatch]
+    [dispatch],
   );
 
   const closeAll = useCallback(() => {
@@ -41,7 +34,7 @@ export const useDialog = () => {
     (key: string) => {
       return activeDialogs.some((d) => d.key === key);
     },
-    [activeDialogs]
+    [activeDialogs],
   );
 
   return {

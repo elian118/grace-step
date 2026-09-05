@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const navigate = useNavigate();
-  const mainPagePaths = ['/attendance', '/classroom', '/exam', '/student'];
+  const mainPagePaths = ['attendance', 'classroom', 'exam', 'student', 'user'];
 
   return (
     <header className="navbar bg-base-100 border-b border-base-200 px-6 xl:rounded-t-box">

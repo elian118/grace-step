@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from '@/store';
 import { addToast, removeToast, type ToastType, type ToastInstance } from '@/store/toastSlice';
 import { useCallback } from 'react';
+import type { CustomApiError } from '@/types/CustomApiError.ts';
 
 export const useToast = () => {
   const dispatch = useAppDispatch();
@@ -29,10 +30,18 @@ export const useToast = () => {
     [dispatch],
   );
 
+  const errorHandler = (error: unknown) => {
+    const errorData = error as CustomApiError;
+    console.error(error);
+    toast(errorData?.data?.message ?? '알 수 없는 오류가 발생했습니다.', 'error');
+    throw error;
+  };
+
   return {
     toastList,
     toast,
     remove,
+    errorHandler,
   };
 };
 

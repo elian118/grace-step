@@ -3,7 +3,6 @@ package com.postelian.backend.domain.attandence.dto;
 import com.postelian.backend.domain.attandence.entity.AttendanceStatus;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 
@@ -14,5 +13,7 @@ public class AttendanceSearchRequestDto {
     private LocalDate endDate;
     private String studentName;
     private AttendanceStatus status;
-    private Pageable pageable;
+    private int page = 1;
+    private int size = 10;
+    private String[] sort;
 }

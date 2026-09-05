@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,13 +62,10 @@ public class AttendanceService {
      */
     public PageResponse<AttendanceResponse> getAttendanceList(AttendanceSearchRequestDto dto) {
         // 1-based page index adjustment
-        Pageable adjustedPageable = PageRequest.of(
-                Math.max(0, dto.getPageable().getPageNumber() - 1),
-                dto.getPageable().getPageSize(),
-                dto.getPageable().getSort()
-        );
+        Sort sort = (dto.getSort() != null) ? Sort.by(dto.getSort()) : Sort.unsorted();
+        Pageable pageable = PageRequest.of(Math.max(0, dto.getPage() - 1), dto.getSize(), sort);
 
-        Page<Attendance> page = attendanceRepository.findAttendanceList(dto.getStartDate(), dto.getEndDate(), dto.getStudentName(), dto.getStatus(), adjustedPageable);
+        Page<Attendance> page = attendanceRepository.findAttendanceList(dto.getStartDate(), dto.getEndDate(), dto.getStudentName(), dto.getStatus(), pageable);
         return PageResponse.of(
                 page.getContent().stream().map(this::convertToResponse).collect(Collectors.toList()),
                 PageMetadata.from(page)

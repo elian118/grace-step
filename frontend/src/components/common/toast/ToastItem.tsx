@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import type { ToastInstance } from '@/store/toastSlice';
 import { useToast } from '@/hooks/useToast';
 import { CheckCircleIcon, InfoIcon, WarningIcon, XCircleIcon } from '@phosphor-icons/react';
-import styles from './ToastItem.module.css'; // 1. CSS 모듈 import
+import styles from './styles/ToastItem.module.css';
 
 interface ToastItemProps {
   item: ToastInstance;

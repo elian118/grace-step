@@ -43,9 +43,9 @@ public class AttendanceController {
     }
 
     @Operation(summary = "출석 기록 목록 조회", description = "조회 기간, 학생명, 출석 상태별로 필터링된 출석 기록 목록을 페이지 단위로 조회합니다.")
-    @GetMapping
+    @PostMapping("/list")
     public ResponseEntity<PageResponse<AttendanceResponse>> getAttendanceList(
-            @ModelAttribute AttendanceSearchRequestDto dto) {
+            @RequestBody AttendanceSearchRequestDto dto) {
         PageResponse<AttendanceResponse> response = attendanceService.getAttendanceList(dto);
         return ResponseEntity.ok(response);
     }

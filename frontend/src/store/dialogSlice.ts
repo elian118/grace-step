@@ -11,7 +11,7 @@ export interface DialogOptions {
 export interface DialogInstance {
   key: string;
   title?: string;
-  props?: never;
+  props?: unknown;
   options?: DialogOptions;
 }
 

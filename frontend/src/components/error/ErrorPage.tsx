@@ -1,7 +1,7 @@
 import React from 'react';
 
-const Error = () => {
+const ErrorPage = () => {
   return <div>오류 페이지</div>;
 };
 
-export default Error;
+export default ErrorPage;
