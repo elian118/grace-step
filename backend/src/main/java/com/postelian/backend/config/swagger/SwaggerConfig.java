@@ -30,7 +30,7 @@ public class SwaggerConfig {
     public GroupedOpenApi userApi() {
         return GroupedOpenApi.builder()
                 .group("01. USER-DOMAIN")
-                .pathsToMatch("/api/v1/users/**")
+                .pathsToMatch("/api/v1/user/**")
                 .packagesToScan("com.postelian.backend.domain.user")
                 .build();
     }
@@ -50,6 +50,24 @@ public class SwaggerConfig {
                 .group("03. AI-DOMAIN")
                 .pathsToMatch("/api/v1/ai/**")
                 .packagesToScan("com.postelian.backend.domain.ai")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi vocabularyApi() {
+        return GroupedOpenApi.builder()
+                .group("04. CLASSROOM-DOMAIN")
+                .pathsToMatch("/api/v1/vocabularies/**")
+                .packagesToScan("com.postelian.backend.domain.classroom")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi examApi() {
+        return GroupedOpenApi.builder()
+                .group("05. EXAM-DOMAIN")
+                .pathsToMatch("/api/v1/exams/**")
+                .packagesToScan("com.postelian.backend.domain.exam")
                 .build();
     }
 }

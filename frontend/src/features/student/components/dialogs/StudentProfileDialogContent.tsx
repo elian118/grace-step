@@ -1,6 +1,4 @@
 import React from 'react';
-import { signupEntries } from '@/features/user/constants/signupEntries.ts';
-import { roleOpts } from '@/features/user/constants/roleOptions.ts';
 import { profileEntries } from '@/features/student/constants/profileEntries.ts';
 import { useStudentProfileDialog } from '@/features/student/hooks/useStudentProfileDialog.ts';
 import { gradeOpts } from '@/features/student/constants/gradeOpts.ts';

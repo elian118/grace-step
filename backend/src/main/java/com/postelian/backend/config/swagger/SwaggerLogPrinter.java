@@ -28,6 +28,8 @@ public class SwaggerLogPrinter implements ApplicationListener<ApplicationReadyEv
         log.info("사용자 관리    : {}?group=01.+USER-DOMAIN", baseUrl);
         log.info("학생/출석 관리 : {}?group=02.+STUDENT-DOMAIN", baseUrl);
         log.info("AI 학습 보조   : {}?group=03.+AI-DOMAIN", baseUrl);
+        log.info("영단어 학습    : {}?group=04.+CLASSROOM-DOMAIN", baseUrl);
+        log.info("시험 출제      : {}?group=05.+EXAM-DOMAIN", baseUrl);
         log.info("==========================================================================================");
     }
 }

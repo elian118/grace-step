@@ -18,7 +18,10 @@ public enum ErrorCode {
     EMAIL_DUPLICATION(400, "U002", "이미 존재하는 이메일입니다."),
 
     // Student
-    STUDENT_NOT_FOUND(404, "S001", "학생 프로필을 찾을 수 없습니다.");
+    STUDENT_NOT_FOUND(404, "S001", "학생 프로필을 찾을 수 없습니다."),
+
+    // Vocabulary
+    VOCABULARY_NOT_FOUND(404, "V001", "영단어를 찾을 수 없습니다.");
 
     private final int status;
     private final String code;
