@@ -2,7 +2,10 @@ import type { StudentProfileResponse } from '@/api/generated/studentApi.ts';
 import type { AttendanceRequest } from '@/api/generated/attendanceApi.ts';
 import { type ColDef } from 'ag-grid-community';
 import type { AttendanceRowData } from '@/features/attandance/types/AttendanceRowData.ts';
-import { STATUS_OPTIONS } from '@/features/attandance/constants/STATUS_OPTIONS.ts';
+import AttendanceToggleView from '@/features/attandance/components/views/AttendanceToggleView.tsx';
+import StatusSelectView from '@/features/attandance/components/views/StatusSelectView.tsx';
+import NoteInputView from '@/features/attandance/components/views/NoteInputView.tsx';
+import GradeLevelView from '@/features/attandance/components/views/GradeLevelView.tsx';
 
 export const attendanceGridKeys: (keyof StudentProfileResponse | keyof AttendanceRequest | 'isPresent')[] = [
   'id',
@@ -27,82 +30,25 @@ export const getColumnDefs = (
     field: keyof AttendanceRowData,
     value: AttendanceRowData[keyof AttendanceRowData],
   ) => void,
-): ColDef<AttendanceRowData>[] => {
-  return attendanceGridEntries.map(({ key, label }) => {
+): ColDef<AttendanceRowData>[] =>
+  attendanceGridEntries.map(({ key, label }) => {
     const fieldKey = key as keyof AttendanceRowData;
 
-    const baseCol: ColDef<AttendanceRowData> = {
+    return {
       field: fieldKey,
       headerName: label,
       editable: true,
-      onCellValueChanged: (params) => {
-        const rowIndex = params.node?.rowIndex;
-        if (typeof rowIndex === 'number' && onCellDataChange) {
-          onCellDataChange(rowIndex, fieldKey, params.newValue);
-        }
-      },
+      minWidth: key === 'id' ? 60 : key === 'note' ? 200 : 100,
+      flex: 1,
+      cellRenderer: (params: any) =>
+        key === 'gradeLevel'
+          ? GradeLevelView(params)
+          : key === 'isPresent'
+            ? AttendanceToggleView(params)
+            : key === 'status'
+              ? StatusSelectView(params)
+              : key === 'note'
+                ? NoteInputView(params)
+                : params.value,
     };
-
-    switch (key) {
-      case 'id':
-      case 'studentName':
-      case 'schoolName':
-      case 'gradeLevel':
-        return {
-          ...baseCol,
-          editable: false,
-        };
-
-      case 'isPresent':
-        return {
-          ...baseCol,
-          cellRenderer: 'agCheckboxCellRenderer',
-          cellEditor: 'agCheckboxCellEditor',
-          editable: true,
-          onCellValueChanged: (params) => {
-            const rowIndex = params.node?.rowIndex;
-
-            if (rowIndex !== null && rowIndex !== undefined && onCellDataChange) {
-              onCellDataChange(rowIndex, 'isPresent', params.newValue);
-            }
-
-            params.api.refreshCells({
-              rowNodes: [params.node!],
-              columns: ['status'],
-              force: true,
-            });
-          },
-        };
-
-      case 'status':
-        return {
-          ...baseCol,
-          editable: (params) => !params.data?.isPresent,
-          cellEditor: 'agSelectCellEditor',
-          cellEditorParams: {
-            values: STATUS_OPTIONS.map((opt) => opt.value),
-          },
-          cellStyle: (params) => {
-            if (params.data?.isPresent) {
-              return { backgroundColor: '#f3f4f6', color: '#9ca3af', cursor: 'not-allowed' };
-            }
-            return null;
-          },
-          valueFormatter: (params) => {
-            if (!params.value) return '';
-            const found = STATUS_OPTIONS.find((opt) => opt.value === params.value);
-            return found ? found.label : String(params.value);
-          },
-        };
-
-      case 'note':
-        return {
-          ...baseCol,
-          cellEditor: 'agTextCellEditor',
-        };
-
-      default:
-        return baseCol;
-    }
   });
-};

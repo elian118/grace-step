@@ -1,2 +1,9 @@
 @import 'tailwindcss';
-@plugin "daisyui";
+@import 'ag-grid-community/styles/ag-grid.css';
+@import 'ag-grid-community/styles/ag-theme-quartz.css';
+
+@plugin "daisyui" {
+  themes:
+    light --default,
+    dark --prefersdark;
+}

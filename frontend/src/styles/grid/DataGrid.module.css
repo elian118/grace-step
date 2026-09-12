@@ -1,3 +1,34 @@
+@reference '../../index.css';
+
+/* 기본 테마 커스텀 */
+.ag-theme-daisy {
+  --ag-font-family: inherit;
+  --ag-border-radius: var(--rounded-box, 0.5rem);
+}
+
+/* 라이트 모드 컬러 매핑 */
+:global(:root[data-theme='light']) .ag-theme-daisy,
+:global(:root:not([data-theme='dark'])) .ag-theme-daisy {
+  --ag-foreground-color: var(--color-base-content, #1f2937);
+  --ag-background-color: var(--color-base-100, #ffffff);
+  --ag-header-background-color: var(--color-base-200, #f3f4f6);
+  --ag-header-foreground-color: var(--color-base-content, #1f2937);
+  --ag-border-color: var(--color-base-300, #e5e7eb);
+  --ag-row-hover-color: color-mix(in srgb, var(--color-base-200) 60%, transparent);
+}
+
+/* 다크 모드 컬러 매핑 (:global로 모듈 스코핑 방지) */
+:global(:root[data-theme='dark']) .ag-theme-daisy,
+:global(:root.dark) .ag-theme-daisy {
+  --ag-foreground-color: var(--color-base-content, #f3f4f6) !important;
+  --ag-background-color: var(--color-base-100, #1d232a) !important;
+  --ag-header-background-color: var(--color-base-200, #191e24) !important;
+  --ag-header-foreground-color: var(--color-base-content, #f3f4f6) !important;
+  --ag-border-color: var(--color-base-300, #2a323c) !important;
+  --ag-row-hover-color: color-mix(in srgb, var(--color-base-200, #191e24) 80%, transparent) !important;
+  --ag-selected-row-background-color: color-mix(in srgb, var(--color-primary, #641ae6) 25%, transparent) !important;
+}
+
 .gridWrapper {
   @apply w-full h-full rounded-xl overflow-hidden border border-base-300 shadow-sm bg-base-100;
 }
@@ -5,50 +36,30 @@
 .gridContainer {
   @apply w-full h-full;
 
-  /* AG Grid 테마 CSS 변수 재정의 */
-  --ag-header-background-color: var(--color-base-200);
-  --ag-header-foreground-color: var(--color-base-content);
-  --ag-border-color: var(--color-base-300);
-  --ag-row-hover-color: color-mix(in srgb, var(--color-base-200) 60%, transparent);
-  --ag-selected-row-background-color: color-mix(in srgb, var(--color-primary) 12%, transparent);
-  --ag-font-family: var(--font-sans);
-  --ag-font-size: 0.875rem;
-
-  /* 높이 및 여백 설정 */
   --ag-header-height: 48px;
   --ag-row-height: 48px;
   --ag-cell-horizontal-padding: 16px;
 }
 
-/* AG Grid 내부 세부 스타일 커스텀 */
 .gridContainer :global(.ag-root-wrapper) {
   border: none !important;
   border-radius: inherit;
+  background-color: var(--ag-background-color) !important;
 }
 
-/* 헤더 텍스트 강조 및 중앙/좌우 정렬 가독성 */
 .gridContainer :global(.ag-header-cell-label) {
   font-weight: 600;
-  color: var(--color-base-content);
+  color: var(--ag-header-foreground-color) !important;
 }
 
-/* 셀 텍스트 수직 중앙 정렬 및 여백 확보 */
 .gridContainer :global(.ag-cell) {
   display: flex;
   align-items: center;
+  color: var(--ag-foreground-color) !important;
 }
 
-/* 행 하단 구분선 스타일링 */
 .gridContainer :global(.ag-row) {
-  border-bottom: 1px solid var(--color-base-200);
-}
-
-/* 스크롤바 모던 스타일링 */
-.gridContainer :global(.ag-body-viewport::-webkit-scrollbar) {
-  width: 6px;
-  height: 6px;
-}
-.gridContainer :global(.ag-body-viewport::-webkit-scrollbar-thumb) {
-  background-color: var(--color-base-300);
-  border-radius: 9999px;
+  border-bottom: 1px solid var(--ag-border-color);
+  background-color: var(--ag-background-color) !important;
+  color: var(--ag-foreground-color) !important;
 }

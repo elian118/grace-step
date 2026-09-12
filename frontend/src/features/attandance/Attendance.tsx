@@ -5,7 +5,8 @@ import AttendanceGridContainer from '@/features/attandance/components/Attendance
 
 const Attendance = () => {
   const [attendances, setAttendances] = useState<
-    StudentProfileResponse & { status: 'ATTENDANCE' | 'LATE' | 'ABSENT' | 'EARLY_LEAVE'; isPresent: boolean }[]
+    StudentProfileResponse &
+      { status: 'ATTENDANCE' | 'LATE' | 'ABSENT' | 'EARLY_LEAVE'; isPresent: boolean; note: string }[]
   >([]);
 
   const value: AttendanceContextType = {
