@@ -48,7 +48,10 @@ export const useAttendanceApi = () => {
 
   const uploadAttendanceFile = async (file: Blob) => {
     try {
-      await uploadAttendanceFileTrigger({ body: { file } }).unwrap();
+      const formData = new FormData();
+      formData.append('file', file);
+
+      await uploadAttendanceFileTrigger({ body: formData as any }).unwrap();
       toast('출석부 파일을 생성했습니다.', 'success');
     } catch (err) {
       errorHandler(err);

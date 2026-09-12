@@ -70,7 +70,7 @@ public class AttendanceController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "출석부 파일 업로드", description = "출석부 PDF 파일을 업로드합니다.")
+    @Operation(summary = "출석부 파일 업로드", description = "출석부 캡처 파일을 업로드합니다.")
     @PostMapping(value = "/files", consumes = {"multipart/form-data"})
     public ResponseEntity<FileResponseDto> uploadAttendanceFile(
             @RequestParam("file") MultipartFile file,

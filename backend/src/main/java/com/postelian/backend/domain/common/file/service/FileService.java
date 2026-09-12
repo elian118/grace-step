@@ -40,7 +40,7 @@ public class FileService {
         }
 
         String targetDir = getTargetDirectory(dto.getType());
-        Path uploadPath = Paths.get(targetDir);
+        Path uploadPath = Paths.get(targetDir).toAbsolutePath().normalize();
 
         try {
             if (!Files.exists(uploadPath)) {
