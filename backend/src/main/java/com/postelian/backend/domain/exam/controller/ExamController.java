@@ -49,9 +49,10 @@ public class ExamController {
     public ResponseEntity<Void> uploadExamPdf(
             @RequestParam String title,
             @RequestParam("file") MultipartFile file,
+            @RequestParam(value = "specifiedFilename", required = false) String specifiedFilename,
             @Parameter(description = "작업을 수행하는 사용자 아이디", example = "teacher_01")
             @RequestHeader(value = "X-User-Id", required = false, defaultValue = "system") String userId) throws IOException {
-        examPdfService.uploadExamPdf(title, file, userId);
+        examPdfService.uploadExamPdf(title, file, specifiedFilename, userId);
         return ResponseEntity.noContent().build();
     }
 }

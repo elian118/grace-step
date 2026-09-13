@@ -11,6 +11,7 @@ import com.postelian.backend.global.common.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -32,6 +33,7 @@ public class AttendanceController {
     private final AttendanceService attendanceService;
     private final FileService fileService;
 
+    @Transactional
     @Operation(summary = "출석 기록 및 수정 (단건)", description = "특정 학생의 당일 출석 여부와 메모를 기록하거나 기존 기록을 수정합니다.")
     @PostMapping
     public ResponseEntity<AttendanceResponse> saveOrUpdateAttendance(
@@ -42,6 +44,7 @@ public class AttendanceController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @Transactional
     @Operation(summary = "출석 기록 및 수정 (다건)", description = "학생 전원의 출석 정보를 한 번에 기록하거나 수정합니다.")
     @PostMapping("/bulk")
     public ResponseEntity<List<AttendanceResponse>> saveOrUpdateAttendances(
@@ -60,6 +63,7 @@ public class AttendanceController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional
     @Operation(summary = "출석 기록 삭제", description = "특정 출석 기록(ID)을 삭제합니다.")
     @DeleteMapping("/{attendanceId}")
     public ResponseEntity<Void> deleteAttendance(
@@ -70,10 +74,12 @@ public class AttendanceController {
         return ResponseEntity.noContent().build();
     }
 
+    @Transactional
     @Operation(summary = "출석부 파일 업로드", description = "출석부 캡처 파일을 업로드합니다.")
     @PostMapping(value = "/files", consumes = {"multipart/form-data"})
     public ResponseEntity<FileResponseDto> uploadAttendanceFile(
             @RequestParam("file") MultipartFile file,
+            @RequestParam(value = "specifiedFilename", required = false) String specifiedFilename,
             @Parameter(description = "작업을 수행하는 사용자 아이디", example = "teacher_01")
             @RequestHeader(value = "X-User-Id", required = false, defaultValue = "system") String userId) {
 
@@ -81,6 +87,7 @@ public class AttendanceController {
         request.setFile(file);
         request.setFileFolderKey(UUID.randomUUID().toString());
         request.setType("ATTENDANCE");
+        request.setSpecifiedFilename(specifiedFilename);
 
         FileResponseDto savedFile = fileService.uploadFile(request, userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedFile);
@@ -96,6 +103,7 @@ public class AttendanceController {
         return ResponseEntity.ok(files);
     }
 
+    @Transactional
     @Operation(summary = "출석부 파일 삭제", description = "특정 출석부 파일을 삭제합니다.")
     @DeleteMapping("/files/{fileId}")
     public ResponseEntity<Void> deleteAttendanceFile(

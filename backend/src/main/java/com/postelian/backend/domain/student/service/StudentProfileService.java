@@ -36,7 +36,7 @@ public class StudentProfileService {
         Sort sort = (dto.getSort() != null) ? Sort.by(dto.getSort()) : Sort.unsorted();
         Pageable pageable = PageRequest.of(Math.max(0, dto.getPage() - 1), dto.getSize(), sort);
 
-        Page<StudentProfile> page = studentProfileRepository.search(dto.getName(), dto.getGradeLevel(), dto.getSchoolName(), dto.getIsActive(), pageable);
+        Page<StudentProfile> page = studentProfileRepository.search(dto.getName(), dto.getGradeLevel(), dto.getClassGrade(), dto.getSchoolName(), dto.getIsActive(), pageable);
         return PageResponse.of(
                 page.getContent().stream().map(StudentProfileResponse::from).collect(Collectors.toList()),
                 PageMetadata.from(page)
@@ -59,6 +59,7 @@ public class StudentProfileService {
                 .teacher(teacher)
                 .schoolName(request.getSchoolName())
                 .gradeLevel(request.getGradeLevel())
+                .classGrade(request.getClassGrade())
                 .parentPhoneNumber(request.getParentPhoneNumber())
                 .memo(request.getMemo())
                 .createdBy(createdBy)
@@ -83,7 +84,7 @@ public class StudentProfileService {
              profile.assignTeacher(teacher, updatedBy);
         }
 
-        profile.updateProfile(request.getSchoolName(), request.getGradeLevel(),
+        profile.updateProfile(request.getSchoolName(), request.getGradeLevel(), request.getClassGrade(),
                 request.getParentPhoneNumber(), request.getMemo(), updatedBy);
 
         return StudentProfileResponse.from(profile);

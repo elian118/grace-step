@@ -27,6 +27,7 @@ class StudentProfileTest {
         assertThat(profile.getCreatedBy()).isEqualTo(userId);
         assertThat(profile.getUpdatedBy()).isEqualTo(userId);
         assertThat(profile.getIsDeleted()).isFalse();
+        assertThat(profile.getClassGrade()).isEqualTo(ClassGrade.ELEM);
     }
 
     @Test
@@ -42,10 +43,11 @@ class StudentProfileTest {
 
         // when
         String updateUserId = "teacher_02";
-        profile.updateProfile("New School", GradeLevel.ELEM_5, "010-1111-1111", null, "메모", updateUserId);
+        profile.updateProfile("New School", GradeLevel.ELEM_5, ClassGrade.MIDDLE, "010-1111-1111", "메모", updateUserId);
 
         // then
         assertThat(profile.getSchoolName()).isEqualTo("New School");
+        assertThat(profile.getClassGrade()).isEqualTo(ClassGrade.MIDDLE);
         assertThat(profile.getUpdatedBy()).isEqualTo(updateUserId);
         assertThat(profile.getCreatedBy()).isEqualTo("teacher_01");
     }

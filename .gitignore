@@ -66,5 +66,5 @@ lerna-debug.log*
 !.env.example
 
 # OS / Uploads / Temp
-/uploads/
+**/uploads/
 *.tmp

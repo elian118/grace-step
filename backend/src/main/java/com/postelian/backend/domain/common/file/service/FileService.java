@@ -48,7 +48,7 @@ public class FileService {
             }
 
             String originalFilename = dto.getFile().getOriginalFilename();
-            String storeFilename = createStoreFileName(originalFilename);
+            String storeFilename = createStoreFileName(originalFilename, dto.getSpecifiedFilename());
             Path filePath = uploadPath.resolve(storeFilename);
 
             dto.getFile().transferTo(filePath.toFile());
@@ -84,6 +84,7 @@ public class FileService {
                     singleRequest.setFile(file);
                     singleRequest.setFileFolderKey(request.getFileFolderKey());
                     singleRequest.setType(request.getType());
+                    singleRequest.setSpecifiedFilename(request.getSpecifiedFilename());
 
                     result.add(uploadFile(singleRequest, createdBy));
                 }
@@ -160,8 +161,14 @@ public class FileService {
     }
 
     // 서버 저장용 고유 파일명 생성
-    private String createStoreFileName(String originalFilename) {
+    private String createStoreFileName(String originalFilename, String specifiedFilename) {
         String ext = extractExt(originalFilename);
+        
+        if (specifiedFilename != null && !specifiedFilename.isEmpty()) {
+            String timestamp = LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+            return specifiedFilename + "_" + timestamp + "." + ext;
+        }
+
         String uuid = UUID.randomUUID().toString();
         return uuid + "." + ext;
     }

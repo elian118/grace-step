@@ -21,7 +21,7 @@ public class ExamPdfService {
     private final ExamQuestionRepository examQuestionRepository;
 
     @Transactional
-    public void uploadExamPdf(String title, MultipartFile pdfFile, String userId) {
+    public void uploadExamPdf(String title, MultipartFile pdfFile, String specifiedFilename, String userId) {
         String fileFolderKey = UUID.randomUUID().toString();
         String type = "EXAM";
 
@@ -30,6 +30,7 @@ public class ExamPdfService {
         uploadRequest.setFile(pdfFile);
         uploadRequest.setFileFolderKey(fileFolderKey);
         uploadRequest.setType(type);
+        uploadRequest.setSpecifiedFilename(specifiedFilename);
         
         var savedFileDto = fileService.uploadFile(uploadRequest, userId);
 

@@ -51,7 +51,7 @@ export const DataGrid = forwardRef(function DataGrid<TData>(
   const themeClass = isDark ? 'ag-theme-quartz-dark' : 'ag-theme-quartz';
 
   return (
-    <div className={`${styles.gridWrapper} relative`} style={{ height: '500px', width: '100%' }}>
+    <div className={`${styles.gridWrapper} relative`} style={{ height: '450px', width: '100%' }}>
       {isLoading && <GridLoadingOverlay />}
       <div className={`${themeClass} ag-theme-daisy ${styles.gridContainer}`}>
         <AgGridReact<TData>

@@ -1,5 +1,6 @@
 package com.postelian.backend.domain.student.dto;
 
+import com.postelian.backend.domain.student.entity.ClassGrade;
 import com.postelian.backend.domain.student.entity.GradeLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import lombok.Setter;
 public class StudentProfileSearchDto {
     private String name;
     private GradeLevel gradeLevel;
+    private ClassGrade classGrade;
     private String schoolName;
     private Boolean isActive;
     private int page = 1;

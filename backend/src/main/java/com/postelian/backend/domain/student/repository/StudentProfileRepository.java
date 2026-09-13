@@ -1,5 +1,6 @@
 package com.postelian.backend.domain.student.repository;
 
+import com.postelian.backend.domain.student.entity.ClassGrade;
 import com.postelian.backend.domain.student.entity.GradeLevel;
 import com.postelian.backend.domain.student.entity.StudentProfile;
 import org.springframework.data.domain.Page;
@@ -13,11 +14,13 @@ public interface StudentProfileRepository extends JpaRepository<StudentProfile, 
     @Query("SELECT sp FROM StudentProfile sp JOIN sp.user u WHERE " +
            "(:name IS NULL OR u.name LIKE %:name%) AND " +
            "(:gradeLevel IS NULL OR sp.gradeLevel = :gradeLevel) AND " +
+           "(:classGrade IS NULL OR sp.classGrade = :classGrade) AND " +
            "(:schoolName IS NULL OR sp.schoolName LIKE %:schoolName%) AND " +
            "(:isActive IS NULL OR sp.isActive = :isActive)")
     Page<StudentProfile> search(
             @Param("name") String name,
             @Param("gradeLevel") GradeLevel gradeLevel,
+            @Param("classGrade") ClassGrade classGrade,
             @Param("schoolName") String schoolName,
             @Param("isActive") Boolean isActive,
             Pageable pageable);

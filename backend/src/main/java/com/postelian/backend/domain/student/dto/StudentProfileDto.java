@@ -1,5 +1,6 @@
 package com.postelian.backend.domain.student.dto;
 
+import com.postelian.backend.domain.student.entity.ClassGrade;
 import com.postelian.backend.domain.student.entity.GradeLevel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -33,6 +34,9 @@ public class StudentProfileDto {
         @Schema(description = "학년", example = "MIDDLE_1")
         private GradeLevel gradeLevel;
 
+        @Schema(description = "반 구분 (기본값: ELEM)", example = "ELEM")
+        private ClassGrade classGrade;
+
         @Schema(description = "학부모 연락처", example = "010-3333-4444")
         private String parentPhoneNumber;
 
@@ -40,12 +44,13 @@ public class StudentProfileDto {
         private String memo;
 
         @Builder
-        public StudentProfileRequest(Long userId, Long teacherId, String schoolName, GradeLevel gradeLevel,
+        public StudentProfileRequest(Long userId, Long teacherId, String schoolName, GradeLevel gradeLevel, ClassGrade classGrade,
                                      String parentPhoneNumber, String memo) {
             this.userId = userId;
             this.teacherId = teacherId;
             this.schoolName = schoolName;
             this.gradeLevel = gradeLevel;
+            this.classGrade = classGrade;
             this.parentPhoneNumber = parentPhoneNumber;
             this.memo = memo;
         }
@@ -70,6 +75,9 @@ public class StudentProfileDto {
         @Schema(description = "학년")
         private final GradeLevel gradeLevel;
 
+        @Schema(description = "반 구분")
+        private final ClassGrade classGrade;
+
         @Schema(description = "활성 여부")
         private final Boolean isActive;
 
@@ -79,6 +87,7 @@ public class StudentProfileDto {
             this.teacherName = profile.getTeacher() != null ? profile.getTeacher().getName() : null;
             this.schoolName = profile.getSchoolName();
             this.gradeLevel = profile.getGradeLevel();
+            this.classGrade = profile.getClassGrade();
             this.isActive = profile.getIsActive();
         }
 

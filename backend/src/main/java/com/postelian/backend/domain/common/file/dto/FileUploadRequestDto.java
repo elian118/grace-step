@@ -16,6 +16,7 @@ public class FileUploadRequestDto {
         private MultipartFile file;
         private String fileFolderKey;
         private String type;
+        private String specifiedFilename; // 지정된 파일명
     }
 
     @Getter
@@ -25,5 +26,6 @@ public class FileUploadRequestDto {
         private List<MultipartFile> files;
         private String fileFolderKey;
         private String type;
+        private String specifiedFilename; // 지정된 파일명
     }
 }

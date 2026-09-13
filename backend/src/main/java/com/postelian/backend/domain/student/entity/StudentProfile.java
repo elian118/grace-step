@@ -40,6 +40,10 @@ public class StudentProfile extends BaseEntity {
     @Column(length = 20)
     private GradeLevel gradeLevel; // 학년
 
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private ClassGrade classGrade; // 반 구분 (초등/중등/고등)
+
     @Column(length = 20)
     private String parentPhoneNumber; // 학부모 연락처
 
@@ -50,12 +54,13 @@ public class StudentProfile extends BaseEntity {
     private String memo; // 특이사항 및 메모
 
     @Builder
-    public StudentProfile(User user, User teacher, String schoolName, GradeLevel gradeLevel,
-                          String phoneNumber, String parentPhoneNumber, Boolean isActive, String memo, String createdBy) {
+    public StudentProfile(User user, User teacher, String schoolName, GradeLevel gradeLevel, ClassGrade classGrade,
+                          String parentPhoneNumber, Boolean isActive, String memo, String createdBy) {
         this.user = user;
         this.teacher = teacher;
         this.schoolName = schoolName;
         this.gradeLevel = gradeLevel;
+        this.classGrade = classGrade != null ? classGrade : ClassGrade.ELEM; // 기본값: ELEM
         this.parentPhoneNumber = parentPhoneNumber;
         this.isActive = isActive != null ? isActive : true; // 기본값: 활성
         this.memo = memo;
@@ -78,11 +83,12 @@ public class StudentProfile extends BaseEntity {
         recordModification(updatedBy);
     }
 
-    // 프로필 정보 수정 (학교, 학년, 본인/학부모 연락처, 메모)
-    public void updateProfile(String schoolName, GradeLevel gradeLevel,
+    // 프로필 정보 수정 (학교, 학년, 반 구분, 본인/학부모 연락처, 메모)
+    public void updateProfile(String schoolName, GradeLevel gradeLevel, ClassGrade classGrade,
                               String parentPhoneNumber, String memo, String updatedBy) {
         this.schoolName = schoolName;
         this.gradeLevel = gradeLevel;
+        this.classGrade = classGrade != null ? classGrade : ClassGrade.ELEM;
         this.parentPhoneNumber = parentPhoneNumber;
         this.memo = memo;
         recordModification(updatedBy);

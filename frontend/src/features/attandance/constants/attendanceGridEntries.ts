@@ -12,12 +12,13 @@ export const attendanceGridKeys: (keyof StudentProfileResponse | keyof Attendanc
   'studentName',
   'schoolName',
   'gradeLevel',
+  'classGrade',
   'isPresent',
   'status',
   'note',
 ];
 
-export const attendanceGridNms = ['ID', '이름', '학교', '학년', '출석 여부', '출석 상태', '특이사항 및 메모'];
+export const attendanceGridNms = ['ID', '이름', '학교', '학년', '반', '출석 여부', '출석 상태', '특이사항 및 메모'];
 
 export const attendanceGridEntries = attendanceGridKeys.map((key, idx) => ({
   key,
@@ -33,15 +34,17 @@ export const getColumnDefs = (
 ): ColDef<AttendanceRowData>[] =>
   attendanceGridEntries.map(({ key, label }) => {
     const fieldKey = key as keyof AttendanceRowData;
+    const w60Keys = ['id', 'gradeLevel'];
+    const gradeKeys = ['classGrade', 'gradeLevel'];
 
     return {
       field: fieldKey,
       headerName: label,
       editable: true,
-      minWidth: key === 'id' ? 60 : key === 'note' ? 200 : 100,
+      minWidth: w60Keys.includes(key) ? 60 : key === 'note' ? 250 : 100,
       flex: 1,
       cellRenderer: (params: any) =>
-        key === 'gradeLevel'
+        gradeKeys.includes(key)
           ? GradeLevelView(params)
           : key === 'isPresent'
             ? AttendanceToggleView(params)
