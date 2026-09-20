@@ -1,41 +1,24 @@
-import React, { useMemo, useEffect, useState, forwardRef } from 'react';
+import React, { forwardRef, useMemo } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import type { ColDef, GridOptions } from 'ag-grid-community';
 import styles from '@/styles/grid/DataGrid.module.css';
 import { GridLoadingOverlay } from './components/loading/GridLoadingOverlay';
+import { useDarkMode } from '@/hooks';
 
 interface DataGridProps<TData> {
   rowData: TData[];
   columnDefs: ColDef<TData>[];
   gridOptions?: GridOptions<TData>;
   isLoading?: boolean;
+  rowHeight?: number;
 }
 
 // forwardRef 및 제네릭(Generic) 적용
 export const DataGrid = forwardRef(function DataGrid<TData>(
-  { rowData, columnDefs, gridOptions, isLoading }: DataGridProps<TData>,
+  { rowData, columnDefs, gridOptions, isLoading, rowHeight }: DataGridProps<TData>,
   ref: React.ForwardedRef<AgGridReact<TData>>,
 ) {
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    const checkDarkMode = () => {
-      const html = document.documentElement;
-      const theme = html.getAttribute('data-theme');
-      const hasDarkClass = html.classList.contains('dark');
-      setIsDark(theme === 'dark' || hasDarkClass);
-    };
-
-    checkDarkMode();
-
-    const observer = new MutationObserver(checkDarkMode);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['data-theme', 'class'],
-    });
-
-    return () => observer.disconnect();
-  }, []);
+  const isDark = useDarkMode();
 
   const defaultColDef = useMemo<ColDef<TData>>(
     () => ({
@@ -57,13 +40,12 @@ export const DataGrid = forwardRef(function DataGrid<TData>(
         <AgGridReact<TData>
           ref={ref} // <- AgGridReact에 ref 전달
           rowData={rowData}
-          rowHeight={34}
+          rowHeight={rowHeight}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
           pagination={false}
           singleClickEdit={true}
-          rowSelection="single"
-          animateRows={true}
+          rowSelection={{ mode: 'singleRow' }}
           {...gridOptions}
         />
       </div>

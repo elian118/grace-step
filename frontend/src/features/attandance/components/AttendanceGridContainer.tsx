@@ -6,14 +6,14 @@ import { getSundayFormattedDate } from '@/features/attandance/utils/getSundayFor
 import { ClassGrade } from '@/features/attandance/constants/ClassGrade.ts';
 
 const AttendanceGridContainer = () => {
-  const { searchParams, handleClassGradeSelect, captureRef, gridRef, attendances, columnDefs, submit } =
+  const { currentTime, searchParams, handleClassGradeSelect, captureRef, gridRef, attendances, columnDefs, submit } =
     useAttendanceGrid();
 
   return (
     <div className="h-full">
       <div ref={captureRef} className="p-2 bg-gray-100 dark:bg-gray-800">
-        <div className="flex flex-rowpx-2 mb-2 gap-2 justify-between items-center">
-          <div className="w-1/3">
+        <div className="flex flex-rowpx-2 gap-2 justify-between items-center">
+          <div className="flex flex-row gap-4 items-end w-1/3">
             <select
               value={searchParams.classGrade}
               className="flex flex-row justify-start items-center w-24 select select-sm"
@@ -26,13 +26,15 @@ const AttendanceGridContainer = () => {
               ))}
             </select>
           </div>
-          <span className="w-1/3 font-bold text-2xl">{getSundayFormattedDate()} 출석부</span>
-          <div className="w-1/3 flex flex-row py-2 gap-2 justify-end items-center">
-            <span className="font-medium text-lg">출석일: {getSundayFormattedDate()}</span>
+          <span className="w-1/3 font-bold text-2xl">출석부</span>
+          <div className="w-1/3 flex flex-col py-2 justify-end items-end">
+            <span className="font-bold text-md">{getSundayFormattedDate()}</span>
+            <span className="font-medium text-md">발행시각: {currentTime}</span>
           </div>
         </div>
         <DataGrid<AttendanceRowData>
           ref={gridRef} // <- gridRef 전달
+          rowHeight={36}
           rowData={attendances as AttendanceRowData[]}
           columnDefs={columnDefs}
         />

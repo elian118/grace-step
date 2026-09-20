@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { AttendanceContext } from '@/features/attandance/contexts/AttendanceContext.ts';
 import { useAttendanceApi } from '@/features/attandance/api/useAttendanceApi.ts';
@@ -6,17 +6,19 @@ import { useAsync } from '@/hooks';
 import { initGetProfilesParams } from '@/features/attandance/constants/initGetProfilesParams.ts';
 import { getColumnDefs } from '@/features/attandance/constants/attendanceGridEntries.ts';
 import type { AttendanceRowData } from '@/features/attandance/types/AttendanceRowData.ts';
-import { getSundayLocalDateTime } from '@/features/attandance/utils/getSundayLocalDateTime.ts';
+import { getSundayLocalDateTime } from '@/features/attandance/utils/getLocalTime.ts';
 import type { AttendanceRequest } from '@/api/generated/attendanceApi.ts';
 import * as htmlToImage from 'html-to-image';
 import type { PageResponseStudentProfileResponse, StudentProfileSearchDto } from '@/api/generated/studentApi.ts';
 import { dataURLtoFile } from '@/utils/dataURLtoFile.ts';
 import { ClassGrade } from '@/features/attandance/constants/ClassGrade.ts';
+import { getLocalTime } from '@/features/attandance/utils/getLocalDateTime.ts';
 
 export const useAttendanceGrid = () => {
   const [searchParams, setSearchParams] = useState<StudentProfileSearchDto>(initGetProfilesParams);
   const { attendancesState } = useContext(AttendanceContext);
   const { getProfiles, saveAttendances, uploadAttendanceFile } = useAttendanceApi(); // updateAttendanceList 추가 가정
+  const [currentTime, setCurrentTime] = useState<string>('00:00:00');
 
   const [attendances, setAttendances] = attendancesState;
 
@@ -93,6 +95,17 @@ export const useAttendanceGrid = () => {
     );
   };
 
+  useEffect(() => {
+    const updateTime = () => {
+      const localDateTimeStr = getLocalTime();
+      setCurrentTime(localDateTimeStr);
+    };
+    updateTime();
+    const timerId = setInterval(updateTime, 1000);
+
+    return () => clearInterval(timerId);
+  }, []);
+
   useAsync(async () => {
     setAttendances([]);
     const res = await getProfiles(initGetProfilesParams);
@@ -100,6 +113,7 @@ export const useAttendanceGrid = () => {
   }, []);
 
   return {
+    currentTime,
     searchParams,
     handleClassGradeSelect,
     captureRef,

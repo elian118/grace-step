@@ -1,65 +1,174 @@
 @reference '../../index.css';
 
-/* 기본 테마 커스텀 */
-.ag-theme-daisy {
-  --ag-font-family: inherit;
-  --ag-border-radius: var(--rounded-box, 0.5rem);
-}
-
-/* 라이트 모드 컬러 매핑 */
-:global(:root[data-theme='light']) .ag-theme-daisy,
-:global(:root:not([data-theme='dark'])) .ag-theme-daisy {
-  --ag-foreground-color: var(--color-base-content, #1f2937);
-  --ag-background-color: var(--color-base-100, #ffffff);
-  --ag-header-background-color: var(--color-base-200, #f3f4f6);
-  --ag-header-foreground-color: var(--color-base-content, #1f2937);
-  --ag-border-color: var(--color-base-300, #e5e7eb);
-  --ag-row-hover-color: color-mix(in srgb, var(--color-base-200) 60%, transparent);
-}
-
-/* 다크 모드 컬러 매핑 (:global로 모듈 스코핑 방지) */
-:global(:root[data-theme='dark']) .ag-theme-daisy,
-:global(:root.dark) .ag-theme-daisy {
-  --ag-foreground-color: var(--color-base-content, #f3f4f6) !important;
-  --ag-background-color: var(--color-base-100, #1d232a) !important;
-  --ag-header-background-color: var(--color-base-200, #191e24) !important;
-  --ag-header-foreground-color: var(--color-base-content, #f3f4f6) !important;
-  --ag-border-color: var(--color-base-300, #2a323c) !important;
-  --ag-row-hover-color: color-mix(in srgb, var(--color-base-200, #191e24) 80%, transparent) !important;
-  --ag-selected-row-background-color: color-mix(in srgb, var(--color-primary, #641ae6) 25%, transparent) !important;
-}
-
 .gridWrapper {
-  @apply w-full h-full rounded-xl overflow-hidden border border-base-300 shadow-sm bg-base-100;
+  @apply w-full h-full rounded-xl overflow-hidden border border-base-300 shadow-sm;
+  background-color: transparent !important;
 }
 
 .gridContainer {
   @apply w-full h-full;
 
   --ag-header-height: 48px;
-  --ag-row-height: 48px;
   --ag-cell-horizontal-padding: 16px;
 }
 
-.gridContainer :global(.ag-root-wrapper) {
-  border: none !important;
-  border-radius: inherit;
-  background-color: var(--ag-background-color) !important;
+/* -------------------------------------------------------------
+ * 1. AG Grid 테마 기본 속성 및 변수 설정
+ * ------------------------------------------------------------- */
+.gridContainer:global(.ag-theme-quartz),
+.gridContainer:global(.ag-theme-quartz-dark),
+.gridContainer :global(.ag-theme-quartz),
+.gridContainer :global(.ag-theme-quartz-dark) {
+  --ag-font-family: inherit;
+  --ag-border-radius: var(--rounded-box, 0.5rem);
 }
 
-.gridContainer :global(.ag-header-cell-label) {
-  font-weight: 600;
-  color: var(--ag-header-foreground-color) !important;
+/* 다크모드 테마 변수 오버라이드 */
+.gridContainer:global(.ag-theme-quartz-dark),
+.gridContainer :global(.ag-theme-quartz-dark) {
+  --ag-background-color: #1d232a !important;
+  --ag-foreground-color: #f3f4f6 !important;
+  --ag-header-background-color: #191e24 !important;
+  --ag-header-foreground-color: #f3f4f6 !important;
+  --ag-border-color: #2a323c !important;
+  --ag-row-hover-color: #2a323c !important;
 }
 
+/* -------------------------------------------------------------
+ * 2. AG Grid v36 스크롤 컨테이너 및 전체 배경 강제 지정 (다크모드)
+ * ------------------------------------------------------------- */
+.gridContainer:global(.ag-theme-quartz-dark) :global(.ag-root-wrapper),
+.gridContainer:global(.ag-theme-quartz-dark) :global(.ag-root-wrapper-body),
+.gridContainer:global(.ag-theme-quartz-dark) :global(.ag-root),
+.gridContainer:global(.ag-theme-quartz-dark) :global(.ag-body),
+.gridContainer:global(.ag-theme-quartz-dark) :global(.ag-body-viewport),
+.gridContainer:global(.ag-theme-quartz-dark) :global(.ag-center-cols-viewport),
+.gridContainer:global(.ag-theme-quartz-dark) :global(.ag-center-cols-container),
+.gridContainer:global(.ag-theme-quartz-dark) :global(.ag-grid-scrolling-container),
+.gridContainer:global(.ag-theme-quartz-dark) :global(.ag-grid-scrollable-area),
+.gridContainer:global(.ag-theme-quartz-dark) :global([class*='ag-grid-viewport']),
+.gridContainer:global(.ag-theme-quartz-dark) :global([class*='ag-grid-scrolling']),
+.gridContainer:global(.ag-theme-quartz-dark) :global(.ag-row),
+.gridContainer:global(.ag-theme-quartz-dark) :global(.ag-overlay-panel) {
+  background-color: #1d232a !important;
+  color: #f3f4f6 !important;
+}
+
+/* 헤더 영역 */
+.gridContainer:global(.ag-theme-quartz-dark) :global(.ag-header),
+.gridContainer:global(.ag-theme-quartz-dark) :global(.ag-header-row),
+.gridContainer:global(.ag-theme-quartz-dark) :global(.ag-header-cell),
+.gridContainer:global(.ag-theme-quartz-dark) :global(.ag-header-viewport) {
+  background-color: #191e24 !important;
+  color: #f3f4f6 !important;
+}
+
+/* -------------------------------------------------------------
+ * 3. 셀 수직 중앙 정렬
+ * ------------------------------------------------------------- */
 .gridContainer :global(.ag-cell) {
-  display: flex;
-  align-items: center;
-  color: var(--ag-foreground-color) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start;
+  line-height: normal !important;
 }
 
-.gridContainer :global(.ag-row) {
-  border-bottom: 1px solid var(--ag-border-color);
-  background-color: var(--ag-background-color) !important;
-  color: var(--ag-foreground-color) !important;
+/* -------------------------------------------------------------
+ * 4. Custom Input / Select / Option 스타일
+ * ------------------------------------------------------------- */
+.gridContainer:global(.ag-theme-quartz) :global(input),
+.gridContainer:global(.ag-theme-quartz) :global(select) {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+.gridContainer:global(.ag-theme-quartz-dark) :global(input),
+.gridContainer:global(.ag-theme-quartz-dark) :global(select),
+.gridContainer:global(.ag-theme-quartz-dark) :global(textarea) {
+  background-color: #191e24 !important;
+  color: #f3f4f6 !important;
+  border: 1px solid #3d4451 !important;
+}
+
+.gridContainer:global(.ag-theme-quartz-dark) :global(select option) {
+  background-color: #191e24 !important;
+  color: #f3f4f6 !important;
+}
+
+/* -------------------------------------------------------------
+ * 4. Custom Input / Select / Toggle / Disabled 상태 시각적 보정
+ * ------------------------------------------------------------- */
+
+/* [공통] 기본 폼 요소 (Input, Select, Textarea) */
+.gridContainer:global(.ag-theme-quartz) :global(input:not([type='checkbox'])),
+.gridContainer:global(.ag-theme-quartz) :global(select) {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  border: 1px solid #d1d5db !important;
+}
+
+.gridContainer:global(.ag-theme-quartz-dark) :global(input:not([type='checkbox'])),
+.gridContainer:global(.ag-theme-quartz-dark) :global(select),
+.gridContainer:global(.ag-theme-quartz-dark) :global(textarea) {
+  background-color: #191e24 !important;
+  color: #f3f4f6 !important;
+  border: 1px solid #3d4451 !important;
+}
+
+.gridContainer:global(.ag-theme-quartz-dark) :global(select option) {
+  background-color: #191e24 !important;
+  color: #f3f4f6 !important;
+}
+
+/* -------------------------------------------------------------
+ * 5. Disabled (비활성화) 상태 스타일 명확화
+ * ------------------------------------------------------------- */
+.gridContainer :global(input:disabled),
+.gridContainer :global(select:disabled),
+.gridContainer :global(textarea:disabled),
+.gridContainer :global(button:disabled) {
+  opacity: 0.45 !important;
+  cursor: not-allowed !important;
+  filter: grayscale(80%) !important;
+}
+
+/* 다크모드 비활성화 시 배경을 짙은 어두운 톤으로 고정 */
+.gridContainer:global(.ag-theme-quartz-dark) :global(input:disabled),
+.gridContainer:global(.ag-theme-quartz-dark) :global(select:disabled),
+.gridContainer:global(.ag-theme-quartz-dark) :global(textarea:disabled) {
+  background-color: #111418 !important;
+  color: #6b7280 !important;
+  border-color: #2a323c !important;
+}
+
+/* -------------------------------------------------------------
+ * 6. Toggle Switch (체크박스 / 토글 스위치) 시각적 대비 강화
+ * ------------------------------------------------------------- */
+
+/* DaisyUI toggle 또는 custom toggle 체크박스 기준 스타일 */
+.gridContainer :global(.toggle),
+.gridContainer :global(input[type='checkbox']) {
+  cursor: pointer;
+}
+
+/* 다크모드 Toggle OFF 상태 */
+.gridContainer:global(.ag-theme-quartz-dark) :global(.toggle:not(:checked)),
+.gridContainer:global(.ag-theme-quartz-dark) :global(input[type='checkbox']:not(:checked)) {
+  background-color: #374151 !important; /* 뚜렷하게 보이는 미드톤 회색 */
+  border-color: #4b5563 !important;
+}
+
+/* 다크모드 Toggle ON 상태 (Primary 포인트 컬러 강조) */
+.gridContainer:global(.ag-theme-quartz-dark) :global(.toggle:checked),
+.gridContainer:global(.ag-theme-quartz-dark) :global(input[type='checkbox']:checked) {
+  background-color: #6366f1 !important; /* 인디고/보라 계열 활성 포인트 컬러 */
+  border-color: #818cf8 !important;
+}
+
+/* Toggle 비활성화(disabled) 처리 */
+.gridContainer :global(.toggle:disabled),
+.gridContainer :global(input[type='checkbox']:disabled) {
+  opacity: 0.35 !important;
+  cursor: not-allowed !important;
 }
