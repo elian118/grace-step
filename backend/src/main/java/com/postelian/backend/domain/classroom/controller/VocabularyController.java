@@ -1,5 +1,6 @@
 package com.postelian.backend.domain.classroom.controller;
 
+import com.postelian.backend.domain.classroom.dto.VocabularyDto.BatchUploadResult;
 import com.postelian.backend.domain.classroom.dto.VocabularyDto.VocabularyRequest;
 import com.postelian.backend.domain.classroom.dto.VocabularyDto.VocabularyResponse;
 import com.postelian.backend.domain.classroom.service.VocabularyService;
@@ -9,8 +10,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,11 +25,21 @@ public class VocabularyController {
 
     private final VocabularyService vocabularyService;
 
+    @Operation(summary = "엑셀 대량 단어 업로드", description = "완성된 영단어 엑셀 파일을 업로드하여 1,000건 단위 배치로 DB에 저장합니다.")
+    @PostMapping(value = "/upload-excel", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<BatchUploadResult> uploadExcel(
+            @RequestPart("file") MultipartFile file,
+            @Parameter(description = "작업 수행 사용자 ID", example = "admin")
+            @RequestHeader(value = "X-User-Id", required = false, defaultValue = "system") String userId) {
+        BatchUploadResult result = vocabularyService.uploadVocabulariesFromExcel(file, userId);
+        return ResponseEntity.ok(result);
+    }
+
     @Operation(summary = "영단어 다건 등록", description = "영단어 목록을 한 번에 등록합니다.")
     @PostMapping("/batch")
     public ResponseEntity<List<VocabularyResponse>> registerVocabularies(
             @RequestBody @Valid List<VocabularyRequest> requests,
-            @Parameter(description = "작업을 수행하는 사용자 아이디", example = "teacher_01")
+            @Parameter(description = "작업 수행 사용자 ID", example = "teacher_01")
             @RequestHeader(value = "X-User-Id", required = false, defaultValue = "system") String userId) {
         List<VocabularyResponse> responses = vocabularyService.registerVocabularies(requests, userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(responses);
@@ -44,20 +57,11 @@ public class VocabularyController {
         return ResponseEntity.ok(vocabularyService.getVocabulary(id));
     }
 
-    @Operation(summary = "영단어 등록/수정(Upsert)", description = "단어 기준으로 존재하면 수정, 없으면 등록합니다.")
-    @PutMapping
-    public ResponseEntity<VocabularyResponse> upsertVocabulary(
-            @RequestBody @Valid VocabularyRequest request,
-            @Parameter(description = "작업을 수행하는 사용자 아이디", example = "teacher_01")
-            @RequestHeader(value = "X-User-Id", required = false, defaultValue = "system") String userId) {
-        return ResponseEntity.ok(vocabularyService.upsertVocabulary(request, userId));
-    }
-
     @Operation(summary = "영단어 다건 삭제", description = "영단어 목록을 삭제(Soft Delete)합니다.")
     @DeleteMapping
     public ResponseEntity<Void> deleteVocabularies(
             @RequestBody List<Long> ids,
-            @Parameter(description = "작업을 수행하는 사용자 아이디", example = "teacher_01")
+            @Parameter(description = "작업 수행 사용자 ID", example = "teacher_01")
             @RequestHeader(value = "X-User-Id", required = false, defaultValue = "system") String userId) {
         vocabularyService.deleteVocabularies(ids, userId);
         return ResponseEntity.noContent().build();

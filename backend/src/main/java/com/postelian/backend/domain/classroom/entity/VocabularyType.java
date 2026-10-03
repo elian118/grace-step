@@ -10,4 +10,11 @@ public enum VocabularyType {
     IDIOM("숙어");
 
     private final String description;
+
+    public static VocabularyType detectType(String word) {
+        if (word != null && word.trim().contains(" ")) {
+            return IDIOM;
+        }
+        return WORD;
+    }
 }
