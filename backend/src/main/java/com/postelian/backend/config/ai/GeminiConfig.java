@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.Duration;
+
 @Configuration
 public class GeminiConfig {
 
@@ -15,7 +17,8 @@ public class GeminiConfig {
     public GoogleAiGeminiChatModel geminiChatModel() {
         return GoogleAiGeminiChatModel.builder()
                 .apiKey(geminiApiKey)
-                .modelName("gemini-1.5-flash") // 필요에 따라 모델 변경
+                .modelName("gemini-3.5-flash-lite") // 필요에 따라 모델 변경
+                .timeout(Duration.ofSeconds(300))
                 .build();
     }
 }

@@ -9,6 +9,10 @@ spring:
       hibernate:
         format_sql: true
         highlight_sql: true
+  servlet:
+    multipart:
+      max-file-size: 10MB      # 단일 파일 최대 크기 (기본값 1MB -> 10MB로 변경)
+      max-request-size: 10MB   # 전체 요청(Request) 최대 크기
 
   # 기본 활성화할 프로필 지정 (실행 시 지정 안 했을 때 적용)
   profiles:

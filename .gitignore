@@ -67,4 +67,5 @@ lerna-debug.log*
 
 # OS / Uploads / Temp
 **/uploads/
+**/excels/
 *.tmp

@@ -24,7 +24,7 @@ public class ExamGenerationService {
     private final ExamQuestionRepository examQuestionRepository;
     private final ObjectMapper objectMapper;
 
-    private static final String PROMPT_PATH = "com/postelian/backend/domain/exam/prompts/exam_generation_prompt.md";
+    private static final String PROMPT_PATH = "prompts/exam_generation_prompt.md";
 
     @Transactional
     public List<ExamQuestion> generateAndSaveExam(ExamRequestDto dto, String userId) throws IOException {
